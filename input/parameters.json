@@ -1,0 +1,39 @@
+{
+    "AOI":{
+        "north": 42.0,
+        "south": 40.0,
+        "west": 14.0,
+        "est": 17.0
+    },
+    "general_path": "D:\\TEMP\\",
+    "snap_folder": "C:\\Users\\user\\.snap",
+    "comp_parameters":{
+        "frac_green":{
+            "min_frac_green": 0.2
+        },
+        "aerodynamic_roughness:":{
+            "soil_roughness": 0.01
+        },
+        "warp":{
+            "algorithm": "near"
+        },
+        "data_mining":{
+            "cv_homogeneity_threshold": 0.0,
+            "moving_window_size": 30,
+            "parallel_jobs": 2
+        },
+        "ecwf_data":{
+            "time_zone": 2
+        },
+        "shortwave_radiation":{
+            "soil_ref_vis": 0.15,
+            "soil_ref_nir": 0.25
+        },
+        "energy_fluxes":{
+            "soil_roughness": 0.01,
+            "alpha_pt": 1.28,
+            "green_vegetation_emissivity": 0.99,
+            "soil_emissivity": 0.97
+        }
+    }
+}
