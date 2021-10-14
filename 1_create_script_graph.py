@@ -28,7 +28,6 @@ else:
 # Definition of general varibles
 with open(path_param, "r") as f:
     param = json.load(f)
-# AOI_WTK = "POLYGON ((" + param[5] + " " + param[1] + ", " + param[7] + " " + param[1] + ", " + param[7] + " " + param[3] + ", " + param[5] + " " + param[3] + ", " + param[5] + " " + param[1] + ", " + param[5] + " " + param[1] + "))"
 AOI_WTK = "POLYGON ((" + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + "))"
 general_path = param["general_path"]
 

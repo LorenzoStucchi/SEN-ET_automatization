@@ -75,13 +75,13 @@ MAIN_FOLDER
                 xfdumanifest.xml
 ```
 ## Set the parameters
-Set the parameters in the file `parameters.json`:
+Set the parameters in the file [`parameters.json`](input/parameters.json):
 - Set the coordinates of the Area Of Interest (AOI), which could be the portion of the Sentinel 2 images or a bigger area; it is used to cut the Sentinel 3 images and improve the speed of the computation.
 - The absolute path indicated by `MAIN_FOLDER` in the previous schema should be inserted in the `general_path` variable. In the example, the `MAIN_FOLDER` absolute path is `"D:\\TEMP\\"`.
 - The path into the `snap_folder` variable. The `snap_folder` is something like `"C:\\Users\\user\\.snap"`.
 - It is also possible to modify all the default computational parameters, as examplained in the Section 3.3 of the official guide. The *only* parameters that should be modify is the timezone of the area.
 
-Finally, copy the absolute path of all the Sentinel Images in the file `s2_path.txt` and `s3_path.txt`. The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
+Finally, copy the absolute path of all the Sentinel Images in the file [`s2_path.txt`](input/s2_path.txt) and [`s3_path.txt`](input/s3_path.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 
 ## Run the code
 ### create script gpt
@@ -122,4 +122,4 @@ In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-script
 ## Authors
 The official code of SNAP is release with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
 
-The code for the automatization of the process is also realease by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE.md).
+The code for the automatization of the process is also realease by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE).
