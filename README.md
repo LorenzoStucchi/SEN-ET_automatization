@@ -6,6 +6,14 @@ The [SEN-ET project](https://www.esa-sen4et.org/) project has been founded for E
 The plugin is mainly thought for use inside SNAP, so a manual operation where the user has to make the different operations manually. However, also the python script for the operation have been released.
 The scope of this repository is to create the possibility to automatize the process, allowing the computation of multiple days without the manual input of the operator. So, it is possible to compute monthly means on an area of interest.
 
+The original schema for the plugin is rappresented in the image below:
+
+![OLD SEN-ET plugin](assets/old.png)
+
+The automation process reduces the number of steps and presents this schema:
+
+![New short sen-et](assets/new.png)
+
 ## Installation
 It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip) as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. In case of troubleshooting, see Section 3.4.
 
