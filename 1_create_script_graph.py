@@ -1,8 +1,8 @@
 import os
 import json
 path_param = "input\\parameters.json"
-path_file_path_s2 = "input\\s2_path.txt"
-path_file_path_s3 = "input\\s3_path.txt"
+path_file_path_s2 = "input\\s2_paths.txt"
+path_file_path_s3 = "input\\s3_paths.txt"
 path_bandmask = "graph\\BandMaths_mask_sentinel_2_pre_processing.xml"
 path_bio = "graph\\BiophysicalOp_sentinel_2_pre_processing.xml"
 path_refl = "graph\\reflectance_sentinel_2_pre_processing.xml"
@@ -28,6 +28,7 @@ else:
 # Definition of general varibles
 with open(path_param, "r") as f:
     param = json.load(f)
+# AOI_WTK = "POLYGON ((" + param[5] + " " + param[1] + ", " + param[7] + " " + param[1] + ", " + param[7] + " " + param[3] + ", " + param[5] + " " + param[3] + ", " + param[5] + " " + param[1] + ", " + param[5] + " " + param[1] + "))"
 AOI_WTK = "POLYGON ((" + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + "))"
 general_path = param["general_path"]
 
