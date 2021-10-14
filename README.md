@@ -89,7 +89,6 @@ Set the parameters in the file [`parameters.json`](input/parameters.json):
 - The path into the `snap_folder` variable. The `snap_folder` is something like `"C:\\Users\\user\\.snap"`.
 - It is also possible to modify all the default computational parameters, as examplained in the Section 3.3 of the official guide. The *only* parameters that should be modify is the timezone of the area.
 
-Finally, copy the absolute path of all the Sentinel Images in the file [`s2_path.txt`](input/s2_path.txt) and [`s3_path.txt`](input/s3_path.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 Finally, copy the absolute path of all the Sentinel Images in the file [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 
 ## Run the code
