@@ -8,6 +8,9 @@
     "general_path": "D:\\TEMP\\",
     "snap_folder": "C:\\Users\\user\\.snap",
     "comp_parameters":{
+        "ecwf_data":{
+            "time_zone": 2
+        },
         "frac_green":{
             "min_frac_green": 0.2
         },
@@ -21,9 +24,6 @@
             "cv_homogeneity_threshold": 0.0,
             "moving_window_size": 30,
             "parallel_jobs": 2
-        },
-        "ecwf_data":{
-            "time_zone": 2
         },
         "shortwave_radiation":{
             "soil_ref_vis": 0.15,

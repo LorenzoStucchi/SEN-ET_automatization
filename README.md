@@ -104,10 +104,7 @@ sh output/1_script_gpt.sh
 
 ### Open SNAP
 It is needed to open the Sentinel image cut on the area of interest on SNAP and report the time of acquisition in the area of interest in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
-The structure of the file should be:
-```
-YYYY_MM_DD HH:MM
-```
+The structure of the file should be: `YYYY_MM_DD HH:MM`
 
 ### create sh script python function
 ```
