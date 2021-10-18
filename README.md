@@ -10,14 +10,16 @@ The original schema for the plugin is rappresented in the image below:
 
 ![OLD SEN-ET plugin](assets/old.png)
 
-The automation process reduces the number of steps and presents this schema:
+The automation process reduces it to one step and presents this schema:
 
-![New short sen-et](assets/new.png)
+![New short sen-et](assets/new_one_step.png)
 
 ## Installation
 It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip) as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. In case of troubleshooting, see Section 3.4.
 
 The test that everything is working will be the download of the ERA5 Data in the next step.
+
+It is neeed for Windows computer also to install the Git Bash terminal that is is provided with the installation of [Git](https://git-scm.com/downloads).
 
 ## Data download
 ### ECMWF Reanalysis v5 (ERA5) Data
@@ -86,40 +88,20 @@ MAIN_FOLDER
 Set the parameters in the file [`parameters.json`](input/parameters.json):
 - Set the coordinates of the Area Of Interest (AOI), which could be the portion of the Sentinel 2 images or a bigger area; it is used to cut the Sentinel 3 images and improve the speed of the computation.
 - The absolute path indicated by `MAIN_FOLDER` in the previous schema should be inserted in the `general_path` variable. In the example, the `MAIN_FOLDER` absolute path is `"D:\\TEMP\\"`.
-- The path into the `snap_folder` variable. The `snap_folder` is something like `"C:\\Users\\user\\.snap"`.
+- The path into the `setet_folder` variable. The `setet_folder` is something like `"C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64"`.
 - It is also possible to modify all the default computational parameters, as examplained in the Section 3.3 of the official guide. The *only* parameters that should be modify is the timezone of the area.
 
 Finally, copy the absolute path of all the Sentinel Images in the file [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 
 ## Run the code
-### create script gpt
+In a Bash terminal run: 
 ```
-python 1_create_script_graph.py
+sh main.sh
 ```
-
-### run gpt
-```
-sh output/1_script_gpt.sh
-```
-
-### Open SNAP
-It is needed to open the Sentinel image cut on the area of interest on SNAP and report the time of acquisition in the area of interest in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
+After the computation of the Sentinel 3 images in the graph processing tool, it is need to insert the time of acquisition for the Sentinel 3 images. So, it is needed to open in SNAP the Sentinel image cut on the area of interest and report the time in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
 The structure of the file should be: `YYYY_MM_DD HH:MM`
 
-### create sh script python function
-```
-python 2_create_script_python.py
-```
-
-### run script s2
-```
-sh output/2_script_S2.sh
-```
-
-### run script s3
-```
-sh output/3_script_S3.sh
-```
+The script produce a message when the Sentinel 3 Images cut are avialable for the computation and request an input to confirm that the file was been created when it is need.
 
 ## Correction of errors
 In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-scripts) the graph presents some errors, due to some changes in the new versions of SNAP. To fix the errors the new version of the graph is present in the folder [graph](graph/).
