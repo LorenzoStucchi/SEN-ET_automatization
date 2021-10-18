@@ -10,7 +10,7 @@ path_file_date_s3 = "output\\days_time_s3.txt"
 with open(path_param, "r") as f:
     p = json.load(f)
 general_path = p["general_path"]
-python_path = p["setet_folder"]
+python_path = p["senet_folder"]
 min_frac_green = str(p["comp_parameters"]["frac_green"]["min_frac_green"])
 soil_roughness_ae = str(p["comp_parameters"]["aerodynamic_roughness"]["soil_roughness"])
 algorithm = str(p["comp_parameters"]["warp"]["algorithm"])
