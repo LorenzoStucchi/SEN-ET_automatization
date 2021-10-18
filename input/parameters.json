@@ -14,7 +14,7 @@
         "frac_green":{
             "min_frac_green": 0.2
         },
-        "aerodynamic_roughness:":{
+        "aerodynamic_roughness":{
             "soil_roughness": 0.01
         },
         "warp":{
