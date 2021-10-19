@@ -113,8 +113,8 @@ for date in date_s3:
     text = text + "echo \"\t Computing the energy fluxes for the image S3 " + str(date) + "\"\n"
     text = text + cmd_fluxes.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
     text = text + "echo \"\t Computing the evapotranspiration for the image S3 " + str(date) + "\"\n"
-    text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n\n"
-    text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + str(date) + "\"\n"
+    text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
+    text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + str(date) + "\"\n\n"
 
 text = text.replace("\\", "\\\\")
 f = open(path_output_s3, "w")
