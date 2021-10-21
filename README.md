@@ -1,12 +1,12 @@
 # Automatization of the SEN-et SNAP plugin for multi-temporal analysis
 ## Description
 
-The [SEN-ET project](https://www.esa-sen4et.org/) project has been founded for ESA with the main object to " develop an optimal methodology for estimating evapotranspiration at fine (tens of meters) spatial scale, based on synergistic use of Sentinel 2 and Sentinel 3 satellites’ observations" as reported by the website of the project.
+The [SEN-ET project](https://www.esa-sen4et.org/) has been founded for ESA with the main object to "develop an optimal methodology for estimating evapotranspiration at fine (tens of meters) spatial scale, based on synergistic use of Sentinel 2 and Sentinel 3 satellites’ observations" as reported by the website of the project.
 
 The plugin is mainly thought for use inside SNAP, so a manual operation where the user has to make the different operations manually. However, also the python script for the operation have been released.
 The scope of this repository is to create the possibility to automatize the process, allowing the computation of multiple days without the manual input of the operator. So, it is possible to compute monthly means on an area of interest.
 
-The original schema for the plugin is rappresented in the image below:
+The original schema for the plugin is represented in the image below:
 
 ![OLD SEN-ET plugin](assets/old.png)
 
@@ -19,7 +19,7 @@ It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](ht
 
 The test that everything is working will be the download of the ERA5 Data in the next step.
 
-It is neeed for Windows computer also to install the Git Bash terminal that is is provided with the installation of [Git](https://git-scm.com/downloads).
+It is also needed for Windows computers to install the Git Bash terminal provided with the installation of [Git](https://git-scm.com/downloads).
 
 ## Data download
 ### ECMWF Reanalysis v5 (ERA5) Data
@@ -89,7 +89,7 @@ Set the parameters in the file [`parameters.json`](input/parameters.json):
 - Set the coordinates of the Area Of Interest (AOI), which could be the portion of the Sentinel 2 images or a bigger area; it is used to cut the Sentinel 3 images and improve the speed of the computation.
 - The absolute path indicated by `MAIN_FOLDER` in the previous schema should be inserted in the `general_path` variable. In the example, the `MAIN_FOLDER` absolute path is `"D:\\TEMP\\"`.
 - The path into the `setet_folder` variable. The `setet_folder` is something like `"C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64"`.
-- It is also possible to modify all the default computational parameters, as examplained in the Section 3.3 of the official guide. The *only* parameters that should be modify is the timezone of the area.
+- It is also possible to modify all the default computational parameters, as explained in Section 3.3 of the official guide. The *only* parameter that should be modified is the [timezone of the area](input/parameters.json#L12).
 
 Finally, copy the absolute path of all the Sentinel Images in the file [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 
@@ -98,15 +98,15 @@ In a Bash terminal run:
 ```
 sh main.sh
 ```
-After the computation of the Sentinel 3 images in the graph processing tool, it is need to insert the time of acquisition for the Sentinel 3 images. So, it is needed to open in SNAP the Sentinel image cut on the area of interest and report the time in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
+After the computation of the Sentinel 3 images in the graph processing tool, it is necessary to insert the time of acquisition for the Sentinel 3 images. So, it is needed to open in SNAP the Sentinel image cut on the area of interest and report the time in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
 The structure of the file should be: `YYYY_MM_DD HH:MM`
 
-The script produce a message when the Sentinel 3 Images cut are avialable for the computation and request an input to confirm that the file was been created when it is need.
+The script produces a message when the Sentinel 3 images are available for the computation and requests to confirm that the file `days_time_s3.txt` has been created.
 
 ## Correction of errors
 In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-scripts) the graph presents some errors, due to some changes in the new versions of SNAP. To fix the errors the new version of the graph is present in the folder [graph](graph/).
 
 ## Authors
-The official code of SNAP is release with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
+The official code of SNAP is released with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
 
-The code for the automatization of the process is also realease by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE).
+The code for the automatization of the process is also realeased by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE).
