@@ -12,7 +12,7 @@ The original schema for the plugin is represented in the image below:
 
 The automation process reduces it to one step and presents this schema:
 
-![New short sen-et](assets/new_one_step.png)
+![New short sen-et](assets/new_full.png)
 
 ## Installation
 It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip) as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. In case of troubleshooting, see Section 3.4.
@@ -20,6 +20,17 @@ It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](ht
 The test that everything is working will be the download of the ERA5 Data in the next step.
 
 It is also needed for Windows computers to install the Git Bash terminal provided with the installation of [Git](https://git-scm.com/downloads).
+
+### Python for generating scripts
+For the automatization of the project, it is needed to have python installed on the computer. Also, these libraries are needed:
+  - xarray
+  - netcdf4
+  - h5netcdf
+
+It is possible and recommended to use conda to create and environment with all the dependency with the command:
+```
+conda env create -f env.yml
+```
 
 ## Data download
 ### ECMWF Reanalysis v5 (ERA5) Data
@@ -43,7 +54,7 @@ The images request needs to be of the product type:
 That option could be added in the filters, zoom to the area of interest and drawn a rectangular in the area. Open the filter panel and add in the sensing date, the timespan of interest for your analysis, and the desired timespan. Using the preview, it is also possible to check the cloud coverage visually.
 
 ### Folder structure
-Once the data are downloaded, it is needed to organize them in a specific way. An analysis of the data for one month will produce products for around 500 GB. The main folder that could be named as prefered, in the schema below `MAIN_FOLDER`. One folder for each type of data called `era`, `S2` and `S3`. Inside the `S2` and `S3` folders, a folder for each of the days of the images, the folder should be named in this format `YYYY_MM_DD`.
+Once the data are downloaded, it is needed to organize them in a specific way. An analysis of the data for one month will produce products for around 500 GB. The main folder that could be named as prefered, in the schema below `MAIN_FOLDER`. One folder for each type of data is called `era`, `S2` and `S3`. Inside the `S2` and `S3` folders, a folder for each of the days of the images, the folder should be named in this format `YYYY_MM_DD`.
 
 Once the structure has been created, the `era5.nc` and the images should be moved to the correct folder. Also, it is needed to unzip the images.
 As example:
@@ -91,17 +102,23 @@ Set the parameters in the file [`parameters.json`](input/parameters.json):
 - The path into the `setet_folder` variable. The `setet_folder` is something like `"C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64"`.
 - It is also possible to modify all the default computational parameters, as explained in Section 3.3 of the official guide. The *only* parameter that should be modified is the [timezone of the area](input/parameters.json#L12).
 
-Finally, copy the absolute path of all the Sentinel Images in the file [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
+Finally, copy the absolute path of all the Sentinel Images in the files [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the file `MTD_MSIL2A.xml` for S2 and `xfdumanifest.xml` for S3.
 
 ## Run the code
-In a Bash terminal run: 
+### Windows
+In conda terminal run: 
 ```
+conda activate senet-auto
+main.sh
+```
+This will open a bash Terminal with all the dependencies correctly installed. 
+
+### Unix system (linux/MacOS)
+In a terminal run: 
+```
+conda activate senet-auto
 sh main.sh
 ```
-After the computation of the Sentinel 3 images in the graph processing tool, it is necessary to insert the time of acquisition for the Sentinel 3 images. So, it is needed to open in SNAP the Sentinel image cut on the area of interest and report the time in the file `days_ADDTIME_s3.txt` and rename it as `days_time_s3.txt`.
-The structure of the file should be: `YYYY_MM_DD HH:MM`
-
-The script produces a message when the Sentinel 3 images are available for the computation and requests to confirm that the file `days_time_s3.txt` has been created.
 
 ## Correction of errors
 In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-scripts) the graph presents some errors, due to some changes in the new versions of SNAP. To fix the errors the new version of the graph is present in the folder [graph](graph/).
@@ -109,4 +126,4 @@ In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-script
 ## Authors
 The official code of SNAP is released with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
 
-The code for the automatization of the process is also realeased by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE).
+The code for the automatization of the process is also released by [Lorenzo Stucchi](https://github.com/LorenzoStucchi) with [GNU General Public License v3.0](LICENSE).
