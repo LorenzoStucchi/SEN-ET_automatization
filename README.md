@@ -21,6 +21,11 @@ The test that everything is working will be the download of the ERA5 Data in the
 
 It is also needed for Windows computers to install the Git Bash terminal provided with the installation of [Git](https://git-scm.com/downloads).
 
+Download the code in the terminal with
+```
+git clone https://github.com/LorenzoStucchi/SEN-ET_automatization.git
+```
+
 ### Python for generating scripts
 For the automatization of the project, it is needed to have python installed on the computer. Also, these libraries are needed:
   - xarray
