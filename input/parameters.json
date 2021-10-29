@@ -6,7 +6,7 @@
         "est": 17.0
     },
     "general_path": "D:\\TEMP\\",
-    "snap_folder": "C:\\Users\\user\\.snap",
+    "senet_folder": "C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2
