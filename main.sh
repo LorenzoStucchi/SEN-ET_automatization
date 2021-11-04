@@ -1,30 +1,10 @@
 #!/bin/bash
 
-python py_script/1_create_script_graph.py
+python py_scripts/1_create_script_graph.py
 sh output/1_script_gpt_s3.sh
-echo "      ===================================================================="
-echo "      ===================================================================="
-echo "      Open SNAP and set the hour of s3 images in the file days_time_s3.txt"
-echo "      ===================================================================="
-echo "      ===================================================================="
-sleep 30
+python py_scripts/2_read_times_s3.py
 sh output/2_script_gpt_s2.sh
-read -r -p "Do you set the S3 time in the file days_time_s3.txt? [Y/n] " input
-if [[ $input == Y ]] || [[ $input == y ]]
-then
-    python py_script/2_create_script_python.py
-    sh output/3_script_S2.sh
-    sh output/4_script_S3.sh
-    echo "Computation ended sucessfully"
-else
-    read -r -p "Please, set the hour and minute of the Sentinel 3 images in the file days_time_s3.txt and then press Y: " input
-    if [[ $input == Y ]] || [[ $input == y ]]
-    then
-        python py_script/2_create_script_python.py
-        sh output/3_script_S2.sh
-        sh output/4_script_S3.sh
-        echo "Computation ended sucessfully"
-    else
-        echo "Wrong value chose, the script ended without computation"
-    fi
-fi
+python py_scripts/3_create_script_python.py
+sh output/3_script_S2.sh
+sh output/4_script_S3.sh
+read -r -p "Computation ended sucessfully! Press any key to close the panel" input

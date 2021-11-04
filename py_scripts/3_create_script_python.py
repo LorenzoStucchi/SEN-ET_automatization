@@ -29,6 +29,7 @@ lookup_table = python_path + "\\sen-et-snap-scripts\\auxdata\\LUT\\ESA_CCI_LUT.c
 general_path_s3 = general_path + "S3\\YYYY_MM_DD\\S3_YYYY_MM_DD"
 general_path_era = general_path + "era\\YYYY_MM_DD\\S3_YYYY_MM_DD"
 general_path_out = general_path + "out\\YYYY_MM_DD\\out_YYYY_MM_DD"
+general_path_et = general_path + "et\\YYYY_MM_DD\\out_YYYY_MM_DD"
 general_path_s2 = general_path + "S2\\YYYY_MM_DD\\S2_YYYY_MM_DD"
 
 # Variable for Sentinel 2 images
@@ -61,7 +62,7 @@ cmd_ecmwf = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\ec
 cmd_long = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\longwave_irradiance.py --meteo_product PATHERA_meteo.dim --at_band air_temperature --vp_band vapour_pressure --ap_band air_pressure --at_height 100 --output_file PATHOUT_longwave_ir.dim"
 cmd_short = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\net_shortwave_radiation.py --lsp_product PATHS2_leaf_spectra.dim --lai_product PATHS2_biophysical.dim --csp_product PATHS2_structural_parameters.dim --mi_product PATHERA_meteo.dim --sza_product PATHS3_hr_vza.dim --soil_ref_vis " + soil_ref_vis + " --soil_ref_nir " + soil_ref_nir + " --output_file PATHOUT_shortwave_ra.dim"
 cmd_fluxes = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\energy_fluxes.py --lst PATHS3_lst_sharpened.dim --lst_vza PATHS3_hr_vza.dim --lai PATHS2_biophysical.dim --csp PATHS2_structural_parameters.dim --fgv PATHS2_frac_green.dim --ar PATHS2_aerodynamic_parameters.dim --mi PATHERA_meteo.dim --nsr PATHOUT_shortwave_ra.dim --li PATHOUT_longwave_ir.dim --mask PATHS2_mask.dim --soil_roughness " + soil_roughness_en + " --alpha_pt " + alpha_pt + " --atmospheric_measurement_height 100 --green_vegetation_emissivity " + green_vegetation_emissivity + " --soil_emissivity " + soil_emissivity + " --save_component_fluxes 1 --save_component_temperature 1 --save_aerodynamic_parameters 1 --output_file PATHOUT_instantaneous_fluxes.dim"
-cmd_et = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\daily_evapotranspiration.py --ief_file PATHOUT_instantaneous_fluxes.dim --mi_file PATHERA_meteo.dim --output_file PATHOUT_daily_evapotranspiration.dim"
+cmd_et = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\daily_evapotranspiration.py --ief_file PATHOUT_instantaneous_fluxes.dim --mi_file PATHERA_meteo.dim --output_file PATHET_daily_evapotranspiration.dim"
 
 # creation of commands for S2 images
 text = ""
@@ -93,6 +94,7 @@ for date in date_s3:
     t_general_path_s3 = general_path_s3.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     t_general_path_out = general_path_out.replace("YYYY", year).replace("MM", mon).replace("DD", day)
+    t_general_path_et = general_path_et.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     data_test = datetime(int(year), int(mon), int(day))
     cloz_dict = {abs(data_test.timestamp() - date.timestamp()) : date for date in date_s2}
     close_s2 = cloz_dict[min(cloz_dict.keys())]
@@ -113,7 +115,7 @@ for date in date_s3:
     text = text + "echo \"\t Computing the energy fluxes for the image S3 " + str(date) + "\"\n"
     text = text + cmd_fluxes.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
     text = text + "echo \"\t Computing the evapotranspiration for the image S3 " + str(date) + "\"\n"
-    text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
+    text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out).replace("PATHET", t_general_path_et) + "\n"
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + str(date) + "\"\n\n"
 
 text = text.replace("\\", "\\\\")
