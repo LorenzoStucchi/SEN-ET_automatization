@@ -67,10 +67,12 @@ script_text = ""
 date_s3 = ""
 for line in file_path_s3:
     s3_image_path = line.strip()
-    path = "\\".join(s3_image_path.split("\\")[:-2])
-    date = " ".join(s3_image_path.split("\\")[-3:-2])
+    path = "\\".join(s3_image_path.split("\\")[:-1])
+    date = " ".join(s3_image_path.split("\\")[-2:-1])
     date_s3 = date_s3 + date + "\n"
     
+    s3_image_path = s3_image_path + "\\xfdumanifest.xml"
+
     # Cut
     script_text = script_text + "echo \"\t Cut the image S3 " + date + "\"\n"
     cut_image = path + "\\S3_" + date + "_cut.dim"
@@ -110,10 +112,12 @@ script_text = ""
 date_s2 = ""
 for line in file_path_s2:
     s2_image_path = line.strip()
-    path = "\\".join(s2_image_path.split("\\")[:-2])
-    date = " ".join(s2_image_path.split("\\")[-3:-2])
+    path = "\\".join(s2_image_path.split("\\")[:-1])
+    date = " ".join(s2_image_path.split("\\")[-2:-1])
     date_s2 = date_s2 + date + "\n"
     
+    s2_image_path = s2_image_path + "\\MTD_MSIL2A.xml"
+
     # Mask file
     script_text = script_text + "echo \"\t Computing the mask for the image S2 " + date + "\"\n"
     mask_image = path + "\\S2_" + date + "_mask.dim"
