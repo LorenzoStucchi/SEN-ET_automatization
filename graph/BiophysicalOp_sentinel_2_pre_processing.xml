@@ -48,7 +48,7 @@
       <sourceProduct refid="Subset"/>
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <sensor>S2A</sensor>
+      <sensor>!INPUT_Sentinel-2_Sensor!</sensor>
       <computeLAI>true</computeLAI>
       <computeFapar>true</computeFapar>
       <computeFcover>true</computeFcover>

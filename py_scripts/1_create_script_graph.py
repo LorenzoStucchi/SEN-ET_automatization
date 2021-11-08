@@ -116,8 +116,9 @@ for line in file_path_s2:
     date = " ".join(s2_image_path.split("\\")[-2:-1])
     date_s2 = date_s2 + date + "\n"
     
+    sensor_s2 = " ".join(s2_image_path.split("\\")[-1:])[:3]
     s2_image_path = s2_image_path + "\\MTD_MSIL2A.xml"
-
+    
     # Mask file
     script_text = script_text + "echo \"\t Computing the mask for the image S2 " + date + "\"\n"
     mask_image = path + "\\S2_" + date + "_mask.dim"
@@ -131,7 +132,7 @@ for line in file_path_s2:
     # Biophysical
     script_text = script_text + "echo \"\t Computing the biophysical parameters for the image S2 " + date + "\"\n"
     bio_image = path + "\\S2_" + date + "_biophysical.dim"
-    text_bio = graph_bio.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_biophysical!", bio_image)
+    text_bio = graph_bio.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_biophysical!", bio_image).replace("!INPUT_Sentinel-2_Sensor!", sensor_s2)
     path_bio = path_graph + "BiophysicalOp_sentinel_2_pre_processing_"  + date +".xml"
     script_text = script_text + "gpt " + path_bio + "\n"
     f = open(path_bio, "w")

@@ -59,7 +59,7 @@ For the download of the Sentinel Images, it is suggested to use the [Copernicus 
 Create an account [here](https://scihub.copernicus.eu/dhus/#/self-registration), and then it is possible to search the images and start the product retrieval, adding them into the cart.
 
 The images request needs to be of the product type:
-- Sentinel 2: `MSIL2A`
+- Sentinel 2: `S2MSI2A`
 - Sentinel 3: `SL_2_LST____`
 
 That option could be added in the filters, zoom to the area of interest and drawn a rectangular in the area. Open the filter panel and add in the sensing date, the timespan of interest for your analysis, and the desired timespan. Using the preview, it is also possible to check the cloud coverage visually.
