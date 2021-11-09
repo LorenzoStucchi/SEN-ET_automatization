@@ -5,8 +5,8 @@
         "west": 14.9,
         "est": 16.5
     },
-    "general_path": "E:\\TEMP\\",
-    "senet_folder": "C:\\Users\\stucchi\\.snap\\auxdata\\sen-et-conda-Win64",
+    "general_path": "D:\\TEMP\\",
+    "senet_folder": "C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2
