@@ -10,7 +10,7 @@ path_resample = "graph\\resample_sentinel_2_pre_processing.xml"
 path_zen = "graph\\sun_zenith_sentinel_2_pre_processing.xml"
 path_LC = "graph\\add_landcover.xml"
 path_ele = "graph\\add_elevation.xml"
-path_cut = "graph\\sentinel_3_cut_time.xml"
+path_cut = "graph\\sentinel_3_cut.xml"
 path_s3_pro = "graph\\sentinel_3_pre_processing_fix.xml"
 path_graph = "output\\graph\\"
 path_date_s2 = "output\\days_s2.txt"
@@ -76,9 +76,9 @@ for line in file_path_s3:
     # Cut
     script_text = script_text + "echo \"\t Cut the image S3 " + date + "\"\n"
     cut_image = path + "\\S3_" + date + "_cut.dim"
-    time_nc = path + "\\S3_" + date + "_time.nc"
-    text_cut = graph_cut.replace("!INPUT_Sentinel-3_LST!", s3_image_path).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_Sentinel-3_cut!", cut_image).replace("!OUTPUT_Sentinel-3_time!", time_nc)
-    path_cut = path_graph + "sentinel_3_cut_time_"  + date +".xml"
+    # time_nc = path + "\\S3_" + date + "_time.nc"
+    text_cut = graph_cut.replace("!INPUT_Sentinel-3_LST!", s3_image_path).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_Sentinel-3_cut!", cut_image)#.replace("!OUTPUT_Sentinel-3_time!", time_nc)
+    path_cut = path_graph + "sentinel_3_cut_"  + date +".xml"
     script_text = script_text + "gpt " + path_cut + "\n"
     f = open(path_cut, "w")
     f.write(text_cut)

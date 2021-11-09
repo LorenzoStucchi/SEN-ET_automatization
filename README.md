@@ -32,17 +32,6 @@ Download the code in the terminal with
 git clone https://github.com/LorenzoStucchi/SEN-ET_automatization.git
 ```
 
-### Python for generating scripts
-For the automatization of the project, it is needed to have python installed on the computer. Also, these libraries are needed:
-  - xarray
-  - netcdf4
-  - h5netcdf
-
-It is possible and recommended to use conda to create the environment with all the dependencies with the command:
-```
-conda env create -f env.yml
-```
-
 ## Data download
 ### ECMWF Reanalysis v5 (ERA5) Data
 The download of the ERA5 data could be done in multiple ways. The suggested one is with the use of the SEN-ET plugin inside SNAP. This will test that the plugin is correctly working.
@@ -116,18 +105,8 @@ Set the parameters in the file [`parameters.json`](input/parameters.json):
 Finally, copy the absolute path of all the Sentinel Images in the files [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the folders `.SAFE` for S2 and `.SEN3` for S3.
 
 ## Run the code
-### Windows
-In conda terminal run: 
+In a terminal run (for Windows use the Git bash terminal): 
 ```
-conda activate senet-auto
-main.sh
-```
-This will open a bash Terminal with all the dependencies correctly installed. 
-
-### Unix system (linux/MacOS)
-In a terminal run: 
-```
-conda activate senet-auto
 sh main.sh
 ```
 
