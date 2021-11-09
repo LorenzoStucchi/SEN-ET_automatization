@@ -1,9 +1,9 @@
 {
     "AOI":{
-        "north": 42.0,
-        "south": 40.0,
-        "west": 14.0,
-        "est": 17.0
+        "north": 41.6,
+        "south": 40.4,
+        "west": 14.9,
+        "est": 16.5
     },
     "general_path": "E:\\TEMP\\",
     "senet_folder": "C:\\Users\\stucchi\\.snap\\auxdata\\sen-et-conda-Win64",
