@@ -27,10 +27,12 @@ soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
 general_path_era_meteo = general_path + "era\\era5.nc"
 lookup_table = python_path + "\\sen-et-snap-scripts\\auxdata\\LUT\\ESA_CCI_LUT.csv"
 general_path_s3 = general_path + "S3\\YYYY_MM_DD\\S3_YYYY_MM_DD"
-general_path_era = general_path + "era\\YYYY_MM_DD\\S3_YYYY_MM_DD"
-general_path_out = general_path + "out\\YYYY_MM_DD\\out_YYYY_MM_DD"
-general_path_et = general_path + "et\\YYYY_MM_DD\\out_YYYY_MM_DD"
+general_path_era = general_path + "era\\YYYY_MM_DD\\YYYY_MM_DD"
+general_path_out = general_path + "out\\YYYY_MM_DD\\YYYY_MM_DD"
+general_path_et = general_path + "et\\dim\\YYYY_MM_DD"
+general_path_et_tiff = general_path + "et\\tiff\\YYYY_MM_DD"
 general_path_s2 = general_path + "S2\\YYYY_MM_DD\\S2_YYYY_MM_DD"
+path_graph_et = "graph\\et_tiff_saving.xml"
 
 # Variable for Sentinel 2 images
 file_date_s2 = open(path_file_date_s2, "r")
@@ -50,6 +52,11 @@ for line in file_date_s3:
     date = line.strip()
     date_s3.append(date)
 file_date_s3.close()
+
+# Open graph for save ET as tiff
+f = open(path_graph_et, "r")
+graph_et = f.read()
+f.close()
 
 # Command list
 cmd_leaf = python_path + "\\python " + python_path + "\\sen-et-snap-scripts\\leaf_spectra.py --biophysical_file PATHS2_biophysical.dim --output_file PATHS2_leaf_spectra.dim"
@@ -95,6 +102,8 @@ for date in date_s3:
     t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     t_general_path_out = general_path_out.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     t_general_path_et = general_path_et.replace("YYYY", year).replace("MM", mon).replace("DD", day)
+    t_general_path_et_tiff = general_path_et_tiff.replace("YYYY", year).replace("MM", mon).replace("DD", day)
+    et_time = str(int(year)) + "_" + str(int(mon)) + "_" + str(int(day))
     data_test = datetime(int(year), int(mon), int(day))
     cloz_dict = {abs(data_test.timestamp() - date.timestamp()) : date for date in date_s2}
     close_s2 = cloz_dict[min(cloz_dict.keys())]
@@ -116,7 +125,18 @@ for date in date_s3:
     text = text + cmd_fluxes.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
     text = text + "echo \"\t Computing the evapotranspiration for the image S3 " + str(date) + "\"\n"
     text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out).replace("PATHET", t_general_path_et) + "\n"
+    
+    # Write ET as geotiff
+    text = text + "echo \"\t Transformation of the evapotranspiration for the image S3 " + str(date) + "\"\n"
+    text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
+    path_grapht_et = "output\\graph\\et_tiff_saving_"  + et_time +".xml"
+    text = text + "gpt " + path_grapht_et + "\n"
+    f = open(path_grapht_et, "w")
+    f.write(text_grapht_et)
+    f.close()
+
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + str(date) + "\"\n\n"
+
 
 text = text.replace("\\", "\\\\")
 f = open(path_output_s3, "w")
