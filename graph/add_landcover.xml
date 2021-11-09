@@ -24,7 +24,7 @@
       <sourceProduct refid="AddLandCover"/>
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-      <sourceBands>land_cover_CCILandCover-2015</sourceBands>
+      <sourceBands/>
       <region/>
       <referenceBand/>
       <geoRegion/>
@@ -48,7 +48,7 @@
   <applicationData id="Presentation">
     <Description/>
     <node id="Read">
-            <displayPosition x="37.0" y="134.0"/>
+      <displayPosition x="37.0" y="134.0"/>
     </node>
     <node id="AddLandCover">
       <displayPosition x="160.0" y="134.0"/>
@@ -57,7 +57,7 @@
       <displayPosition x="291.0" y="135.0"/>
     </node>
     <node id="Write">
-            <displayPosition x="407.0" y="135.0"/>
+      <displayPosition x="407.0" y="135.0"/>
     </node>
   </applicationData>
 </graph>

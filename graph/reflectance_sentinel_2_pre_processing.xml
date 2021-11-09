@@ -72,7 +72,7 @@
   <applicationData id="Presentation">
     <Description/>
     <node id="Read">
-            <displayPosition x="37.0" y="134.0"/>
+      <displayPosition x="37.0" y="134.0"/>
     </node>
     <node id="Resample">
       <displayPosition x="142.0" y="133.0"/>
