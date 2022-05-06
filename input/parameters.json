@@ -13,7 +13,8 @@
         "est": 8
     },
     "general_path": "E:\\TEMP\\piemonte_T32TLQ\\",
-    "senet_folder": "C:\\Users\\stucchi\\.snap\\auxdata\\sen-et-conda-Win64",
+    "senet_folder": "/home/eouser/.snap/auxdata/sen-et-conda-Win64",
+    "temp_files" : "/home/eouser/lstucchi_data",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2
