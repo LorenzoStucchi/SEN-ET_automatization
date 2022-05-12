@@ -29,12 +29,12 @@ green_vegetation_emissivity = str(p["comp_parameters"]["energy_fluxes"]["green_v
 soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
 lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
 
-general_path_era_meteo = intermediate_path + "era/era5.nc"
-general_path_s2 = intermediate_path + "Sentinel-2/MSI/L2A/" + "YYYY/MM/DD/S2_YYYY_MM_DD"
-general_path_s3 = intermediate_path + "Sentinel-3/SLSTR/SL_2_LST/" + "YYYY/MM/DD/S3_YYYY_MM_DD"
-general_path_era = intermediate_path + "era/YYYY/MM/DD/YYYY_MM_DD"
-general_path_out = intermediate_path + "out/YYYY/MM/DD/YYYY_MM_DD"
-general_path_et = intermediate_path + "et/dim/YYYY_MM_DD"
+general_path_era_meteo = intermediate_path + "/era/era5.nc"
+general_path_s2 = intermediate_path + "/Sentinel-2/MSI/L2A/" + "YYYY/MM/DD/S2_YYYY_MM_DD"
+general_path_s3 = intermediate_path + "/Sentinel-3/SLSTR/SL_2_LST/" + "YYYY/MM/DD/S3_YYYY_MM_DD"
+general_path_era = intermediate_path + "/era/YYYY/MM/DD/YYYY_MM_DD"
+general_path_out = intermediate_path + "/out/YYYY/MM/DD/YYYY_MM_DD"
+general_path_et = intermediate_path + "/et/dim/YYYY_MM_DD"
 general_path_et_tiff = et_path + "/YYYY_MM_DD"
 
 path_graph_et = "graph/et_tiff_saving.xml"
