@@ -134,7 +134,7 @@ for date in date_s3:
     # Write ET as geotiff
     text = text + "echo \"\t Transformation of the evapotranspiration for the image S3 " + str(date) + "\"\n"
     text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
-    path_grapht_et = "output\\graph\\et_tiff_saving_"  + et_time +".xml"
+    path_grapht_et = "output/graph/et_tiff_saving_"  + et_time +".xml"
     text = text + "gpt " + path_grapht_et + "\n"
     f = open(path_grapht_et, "w")
     f.write(text_grapht_et)
