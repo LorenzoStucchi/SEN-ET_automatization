@@ -15,6 +15,7 @@
     "general_path_piemonte": "E:\\TEMP\\piemonte_T32TLQ\\",
     "senet_folder": "/home/eouser/.snap/auxdata/sen-et-conda-Linux64",
     "temp_files" : "/home/eouser/lstucchi_data",
+    "output_files" : "/home/eouser/et_maps",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2

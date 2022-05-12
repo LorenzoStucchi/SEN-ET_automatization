@@ -1,15 +1,18 @@
 from datetime import datetime
 import json
-path_param = "input\\parameters.json"
-path_output_s2 = "output\\3_script_S2.sh"
-path_output_s3 = "output\\4_script_S3.sh"
-path_file_date_s2 = "output\\days_s2.txt"
-path_file_date_s3 = "output\\days_time_s3.txt"
+path_param = "input/parameters.json"
+path_output_s2 = "output/3_script_S2.sh"
+path_output_s3 = "output/4_script_S3.sh"
+path_file_date_s2 = "output/days_s2.txt"
+path_file_date_s3 = "output/days_time_s3.txt"
+tile_s2 = "T33TWF"
 
 # Definition of general varibles
 with open(path_param, "r") as f:
     p = json.load(f)
 general_path = p["general_path"]
+intermediate_path = p["temp_files"]
+et_path = p["output_files"]
 python_path = p["senet_folder"]
 min_frac_green = str(p["comp_parameters"]["frac_green"]["min_frac_green"])
 soil_roughness_ae = str(p["comp_parameters"]["aerodynamic_roughness"]["soil_roughness"])
@@ -24,15 +27,17 @@ soil_roughness_en = str(p["comp_parameters"]["energy_fluxes"]["soil_roughness"])
 alpha_pt = str(p["comp_parameters"]["energy_fluxes"]["alpha_pt"])
 green_vegetation_emissivity = str(p["comp_parameters"]["energy_fluxes"]["green_vegetation_emissivity"])
 soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
-general_path_era_meteo = general_path + "era\\era5.nc"
-lookup_table = python_path + "\\sen-et-snap-scripts\\auxdata\\LUT\\ESA_CCI_LUT.csv"
-general_path_s3 = general_path + "S3\\YYYY_MM_DD\\S3_YYYY_MM_DD"
-general_path_era = general_path + "era\\YYYY_MM_DD\\YYYY_MM_DD"
-general_path_out = general_path + "out\\YYYY_MM_DD\\YYYY_MM_DD"
-general_path_et = general_path + "et\\dim\\YYYY_MM_DD"
-general_path_et_tiff = general_path + "et\\tiff\\YYYY_MM_DD"
-general_path_s2 = general_path + "S2\\YYYY_MM_DD\\S2_YYYY_MM_DD"
-path_graph_et = "graph\\et_tiff_saving.xml"
+lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
+
+general_path_era_meteo = intermediate_path + "era/era5.nc"
+general_path_s2 = intermediate_path + "Sentinel-2/MSI/L2A/" + "YYYY/MM/DD/S2_YYYY_MM_DD"
+general_path_s3 = intermediate_path + "Sentinel-3/SLSTR/SL_2_LST/" + "YYYY/MM/DD/S3_YYYY_MM_DD"
+general_path_era = intermediate_path + "era/YYYY/MM/DD/YYYY_MM_DD"
+general_path_out = intermediate_path + "out/YYYY/MM/DD/YYYY_MM_DD"
+general_path_et = intermediate_path + "et/dim/YYYY_MM_DD"
+general_path_et_tiff = et_path + "/YYYY_MM_DD"
+
+path_graph_et = "graph/et_tiff_saving.xml"
 
 # Variable for Sentinel 2 images
 file_date_s2 = open(path_file_date_s2, "r")
