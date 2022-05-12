@@ -1,14 +1,15 @@
 import xml.etree.ElementTree as ET
 import json
 
-path_param = "input\\parameters.json"
-path_file_date_s3 = "output\\days_s3.txt"
-path_file_datetime_s3 = "output\\days_time_s3.txt"
+path_param = "input/parameters.json"
+path_file_date_s3 = "output/days_s3.txt"
+path_file_datetime_s3 = "output/days_time_s3.txt"
 
 # Definition of general varibles
 with open(path_param, "r") as f:
     p = json.load(f)
 general_path = p["general_path"]
+intermediate_output_path = p["temp_files"]
 
 # Variable for Sentinel 3 images
 file_date_s3 = open(path_file_date_s3, "r")
@@ -20,7 +21,9 @@ file_date_s3.close()
 
 text = ""
 for day in date_s3:
-    path = general_path + "S3\\"  + day + "\\S3_" + day + "_cut.dim"
+    # path = general_path + "S3\\"  + day + "\\S3_" + day + "_cut.dim"
+    day_path = day.replace("_", "/")
+    path = intermediate_output_path + "/Sentinel-3/SLSTR/SL_2_LST/" + day_path + "/S3_" + day + "_cut.dim"
     for line in open(path, 'r').readlines():
         if "PRODUCT_SCENE_RASTER_START_TIME" in line:
             data_start = line.split(">")[1].split("<")[0]
