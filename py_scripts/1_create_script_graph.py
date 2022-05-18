@@ -78,7 +78,7 @@ for line in file_path_s3:
     cut_image = path + "/S3_" + date + "_cut.dim"
     text_cut = graph_cut.replace("!INPUT_Sentinel-3_LST!", s3_image_path).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_Sentinel-3_cut!", cut_image)
     path_cut = path_graph + "sentinel_3_cut_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_cut + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_cut + "\n"
     script_text = script_text + "echo \"Cut the image S3 " + date + "\"\n"
     f = open(path_cut, "w")
     f.write(text_cut)
@@ -91,7 +91,7 @@ for line in file_path_s3:
     lst_image = path + "/S3_" + date + "_lst.dim"
     text_s3_pro = graph_s3_pro.replace("!INPUT_Sentinel-3_LST!", cut_image).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_observation_geometry!", obs_image).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_LST!", lst_image)
     path_s3_pro = path_graph + "sentinel_3_preprocessing_fix_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_s3_pro + "\n" 
+    script_text = script_text + "time -v gpt -q 512 " + path_s3_pro + "\n" 
     script_text = script_text + "echo \"Processed the image S3 " + date + "\"\n" + "\n\n"
     f = open(path_s3_pro, "w")
     f.write(text_s3_pro)
@@ -126,7 +126,7 @@ for line in file_path_s2:
     mask_image = path + "/S2_" + date + "_mask.dim"
     text_mask = graph_bandmask.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_mask!", mask_image)
     path_mask = path_graph + "BandMaths_mask_sentinel_2_pre_processing_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_mask + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_mask + "\n"
     script_text = script_text + "echo \"Computed the mask for the image S2 " + date + "\"\n"
     f = open(path_mask, "w")
     f.write(text_mask)
@@ -137,7 +137,7 @@ for line in file_path_s2:
     bio_image = path + "/S2_" + date + "_biophysical.dim"
     text_bio = graph_bio.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_biophysical!", bio_image).replace("!INPUT_Sentinel-2_Sensor!", sensor_s2)
     path_bio = path_graph + "BiophysicalOp_sentinel_2_pre_processing_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_bio + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_bio + "\n"
     script_text = script_text + "echo \"Computing the biophysical parameters for the image S2 " + date + "\"\n"
     f = open(path_bio, "w")
     f.write(text_bio)
@@ -148,7 +148,7 @@ for line in file_path_s2:
     refl_image = path + "/S2_" + date + "_reflectance.dim"
     text_refl = graph_refl.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_reflectance!", refl_image)
     path_refl = path_graph + "reflectance_sentinel_2_pre_processing_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_refl + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_refl + "\n"
     script_text = script_text + "echo \"Computed the reflectance for the image S2 " + date + "\"\n"
     f = open(path_refl, "w")
     f.write(text_refl)
@@ -159,7 +159,7 @@ for line in file_path_s2:
     resample_image = path + "/S2_" + date + "_resampled.dim"
     text_resample = graph_resample.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_resampled!", resample_image)
     path_resample = path_graph + "resample_sentinel_2_pre_processing_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_resample + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_resample + "\n"
     script_text = script_text + "echo \"Resampled the image S2 " + date + "\"\n"
     f = open(path_resample, "w")
     f.write(text_resample)
@@ -170,7 +170,7 @@ for line in file_path_s2:
     zen_image = path + "/S2_" + date + "_sun_zenith_angle.dim"
     text_zen = graph_zen.replace("!INPUT_Sentinel-2_L2A!", s2_image_path).replace("!OUTPUT_sun_zenith_angle!", zen_image)
     path_zen = path_graph + "sun_zenith_sentinel_2_pre_processing_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_zen + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_zen + "\n"
     script_text = script_text + "echo \"Computed the sun zenith angular map for the image S2 " + date + "\"\n"
     f = open(path_zen, "w")
     f.write(text_zen)
@@ -181,7 +181,7 @@ for line in file_path_s2:
     LC_image = path + "/S2_" + date + "_landcover.dim"
     text_LC = graph_LC.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_CCI_landcover!", LC_image)
     path_LC = path_graph + "add_landcover_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_LC + "\n"
+    script_text = script_text + "time -v gpt -q 512 " + path_LC + "\n"
     script_text = script_text + "echo \"Computed the landcover for the image S2 " + date + "\"\n"
     f = open(path_LC, "w")
     f.write(text_LC)
@@ -192,7 +192,7 @@ for line in file_path_s2:
     ele_image = path + "/S2_" + date + "_elevation.dim"
     text_ele = graph_ele.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_SRTM_elevation!", ele_image)
     path_ele = path_graph + "add_elevation_"  + date +".xml"
-    script_text = script_text + "time gpt " + path_ele + "\n" 
+    script_text = script_text + "time -v gpt -q 512 " + path_ele + "\n" 
     script_text = script_text + "echo \"Computed the elevation for the image S2 " + date + "\"\n" + "\n\n"
     f = open(path_ele, "w")
     f.write(text_ele)
