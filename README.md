@@ -102,8 +102,6 @@ Set the parameters in the file [`parameters.json`](input/parameters.json):
 - The path into the `senet_folder` variable. The `senet_folder` is something like `"C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64"`.
 - It is also possible to modify all the default computational parameters, as explained in Section 3.3 of the official guide. The *only* parameter that should be modified is the [timezone of the area](input/parameters.json#L12).
 
-Finally, copy the absolute path of all the Sentinel Images in the files [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the folders `.SAFE` for S2 and `.SEN3` for S3.
-
 ## Run the code
 In a terminal run (for Windows use the Git bash terminal): 
 ```
