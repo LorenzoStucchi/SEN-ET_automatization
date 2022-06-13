@@ -1,12 +1,12 @@
 {
     "AOI":{
-        "north": 41.6,
-        "south": 40.4,
-        "west": 14.9,
-        "est": 16.5
+        "north": 46,
+        "south": 44,
+        "west": 6,
+        "est": 8
     },
-    "general_path": "D:\\TEMP\\",
-    "senet_folder": "C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64",
+    "general_path": "E:\\TEMP\\",
+    "senet_folder": "C:\\Users\\stucchi\\.snap\\auxdata\\sen-et-conda-Win64",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2
