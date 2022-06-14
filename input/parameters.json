@@ -1,18 +1,10 @@
 {
     "AOI":{
-        "north": 41.6,
-        "south": 40.4,
-        "west": 14.9,
-        "est": 16.5
+        "north": 42,
+        "south": 39,
+        "west": 14,
+        "est": 18
     },
-    "general_path": "E:\\TEMP\\puglia_T33TWF\\",
-    "AOI_piemonte":{
-        "north": 46,
-        "south": 44,
-        "west": 6,
-        "est": 8
-    },
-    "general_path_piemonte": "E:\\TEMP\\piemonte_T32TLQ\\",
     "senet_folder": "/home/eouser/.snap/auxdata/sen-et-conda-Linux64",
     "temp_files" : "/home/eouser/local_data",
     "output_files" : "/home/eouser/et_maps",
@@ -32,7 +24,7 @@
         "data_mining":{
             "cv_homogeneity_threshold": 0.0,
             "moving_window_size": 30,
-            "parallel_jobs": 2
+            "parallel_jobs": 8
         },
         "shortwave_radiation":{
             "soil_ref_vis": 0.15,
