@@ -1,6 +1,6 @@
 #!/bin/bash
 
-time python py_scripts/0_path_read.py
+time python3 py_scripts/0_path_read.py
 echo "==================="
 time python3 py_scripts/1_create_script_graph.py
 echo "==================="
