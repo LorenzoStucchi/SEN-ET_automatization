@@ -1,51 +1,48 @@
 import xml.etree.ElementTree as ET
 import json
 
-path_param = "input/parameters.json"
-path_file_date_s3 = "output/days_s3.txt"
-path_file_datetime_s3 = "output/days_time_s3.txt"
+file_param = "input/parameters.json"
+file_path = "output/path.json"
+path_file_datetime = "output/path_hour.json"
 
 # Definition of general varibles
-with open(path_param, "r") as f:
+with open(file_param, "r") as f:
     p = json.load(f)
-general_path = p["general_path"]
-intermediate_output_path = p["temp_files"]
+# general_path = p["general_path"]
 
-# Variable for Sentinel 3 images
-file_date_s3 = open(path_file_date_s3, "r")
-date_s3 = []
-for line in file_date_s3:
-    date = line.strip()
-    date_s3.append(date)
-file_date_s3.close()
+with open(file_path, "r") as f:
+    images = json.load(f)["data"]
 
-text = ""
-for day in date_s3:
-    # path = general_path + "S3\\"  + day + "\\S3_" + day + "_cut.dim"
-    day_path = day.replace("_", "/")
-    path = intermediate_output_path + "/Sentinel-3/SLSTR/SL_2_LST/" + day_path + "/S3_" + day + "_cut.dim"
-    for line in open(path, 'r').readlines():
-        if "PRODUCT_SCENE_RASTER_START_TIME" in line:
-            data_start = line.split(">")[1].split("<")[0]
-        if "PRODUCT_SCENE_RASTER_STOP_TIME" in line:
-            data_end = line.split(">")[1].split("<")[0]
-    start_time = int(data_start[12:14])*3600 + int(data_start[15:17])*60 + float(data_start[18:])
-    end_time = int(data_end[12:14])*3600 + int(data_end[15:17])*60 + float(data_start[18:])
-    mean_time = float((start_time + end_time)/2)
-    mean_time_h = int(mean_time/3600)
-    mean_time_m = int(mean_time%3600/60)
-    if mean_time_h < 10:
-        hours = "0" + str(mean_time_h)
-    else:
-        hours = str(mean_time_h)
-    if mean_time_m < 10:
-        minutes = "0" + str(mean_time_m)
-    else:
-        minutes = str(mean_time_m)
-    text = text + day + " " + hours + ":" + minutes + "\n"
+for image in images:
+    if image["platform"] == "S3":
+        path = image["derived_product_path"] + "/S3_mask.dim"
+        for line in open(path, 'r').readlines():
+            if "PRODUCT_SCENE_RASTER_START_TIME" in line:
+                data_start = line.split(">")[1].split("<")[0]
+            if "PRODUCT_SCENE_RASTER_STOP_TIME" in line:
+                data_end = line.split(">")[1].split("<")[0]
+        start_time = int(data_start[12:14])*3600 + int(data_start[15:17])*60 + float(data_start[18:])
+        end_time = int(data_end[12:14])*3600 + int(data_end[15:17])*60 + float(data_start[18:])
+        mean_time = float((start_time + end_time)/2)
+        mean_time_h = int(mean_time/3600)
+        mean_time_m = int(mean_time%3600/60)
+        if mean_time_h < 10:
+            hours = "0" + str(mean_time_h)
+        else:
+            hours = str(mean_time_h)
+        if mean_time_m < 10:
+            minutes = "0" + str(mean_time_m)
+        else:
+            minutes = str(mean_time_m)
+        image["hour"] = hours + ":" + minutes
 
-f = open(path_file_datetime_s3, "w")
-f.write(text)
-f.close()
+    if image["uid"] == 0 :
+        temp = "\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
+    else: 
+        temp = temp + ",\n\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
 
-print("\tTimes file created!\n\t" + path_file_datetime_s3)
+j = "{\n\t\"data\":\n\t[\n" + temp + "\n\t]\n}"
+with open(path_file_datetime, "w") as f:
+    f.write(j)
+
+print("\tTimes file created!\n\t" + path_file_datetime)

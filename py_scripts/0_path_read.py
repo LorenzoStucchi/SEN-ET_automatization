@@ -1,81 +1,84 @@
-from msilib.schema import Component
 import os
 import json
-import datetime
 
 path_images_file = "input/images.txt"
-images_file = open(path_images_file, "r")
+path_param = "input/parameters.json"
 
+n = 0
 s2_text = ""
 s3_text = ""
+s_json_template = "\t\t{ \n\t\t\t\"uid\": UID, \n\t\t\t\"platform\": \"PLATFORM\", \n\t\t\t\"path\": \"PATH\", \n\t\t\t\"derived_product_path\": \"INTERMEDIATE\", \n\t\t\t\"tile\": \"TILEID\", \n\t\t\t\"time\": \"TIME\" \n\t\t}"
+
+images_file = open(path_images_file, "r")
+
+with open(path_param, "r") as f:
+    intermediate_output_path = json.load(f)["temp_files"]
+
+# Create directory
+if os.path.isdir("output") == False:
+    os.mkdir("output")
 
 for line in images_file:
     components = line.split("_")
     sentinel = components[0]
     if sentinel == "S2A" or sentinel == "S2B":
-        # level = components[1]
+        sensor = components[1][0:3]
+        level = components[1][3:6]
         date = components[2]
         year = date[0:4]
         month = date[4:6]
         day = date[6:8]
-        if line[-4:] == "SAFE":
-            name = line
-        else:
+        if ".SAFE" in line:
+            if "\n" in line:
+                name = line[:-1]
+            else:
+                name = line
+        elif "\n" in line:
             name = line[:-1] + ".SAFE"
-        # TODO: check the L2A
-        s2_text = s2_text + "/eodata/Sentinel-2/MSI/L2A/" + year + "/" + month + "/" + day + "/" + name + "\n"
+        else:
+            name = line + ".SAFE"
+        if level == "L2A":
+            tile = name.split("_")[5]
+            if s2_text == "":
+                s2_text = s_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", "/eodata/Sentinel-2/" + sensor + "/" + level + "/" + year + "/" + month + "/" + day + "/" + name + "/MTD_MSIL2A.xml").replace("TILEID", tile).replace("TIME", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day )
+            else:
+                s2_text = s2_text + ",\n" + s_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", "/eodata/Sentinel-2/" + sensor + "/" + level + "/" + year + "/" + month + "/" + day + "/" + name + "/MTD_MSIL2A.xml").replace("TILEID", tile).replace("TIME", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
+            n = n + 1
+        else:
+            print(name + "is not a valid Sentinel-2 L2A image")
     elif sentinel == "S3A" or sentinel == "S3B":
+        level = components[2]
+        sensor = components[3]
         date = components[7]
         year = date[0:4]
         month = date[4:6]
         day = date[6:8]
-        if line[-4:] == "SEN3":
-            name = line
-        else:
+        if ".SEN3" in line:
+            if "\n" in line:
+                name = line[:-1]
+            else:
+                name = line
+        elif "\n" in line:
             name = line[:-1] + ".SEN3"
-        # TODO: check the LST
-        s3_text = s3_text + "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "\n"
+        else:
+            name = line + ".SEN3"
+        if sensor == "LST" and level == "2":
+            tile = name[64:81]
+            if s3_text == "":
+                s3_text = s_json_template.replace("UID", str(n)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("TIME", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
+            else:
+                s3_text = s3_text + ",\n" + s_json_template.replace("UID", str(n)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("TIME", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
+            n = n + 1
+        else:
+            print(name + "is not a valid Sentinel-3 LST image")
 
-# def is_valid_date(input_date):
-#     try:
-#         date = input_date.split("_")
-#         newDate = datetime.datetime(int(date[0]),int(date[1]),int(date[2]))
-#         return True
-#     except ValueError:
-#         return False
+images_file.close()
 
-# path_param = "input\\parameters.json"
-
-# with open(path_param, "r") as f:
-#     param = json.load(f)
-
-# general_path = param["general_path"]
-
-# sub_folders = [name for name in os.listdir(general_path) if os.path.isdir(os.path.join(general_path, name))]
-
-# for folder in sub_folders:
-#     temp_path = general_path + folder
-#     if folder == "S2":
-#         list_s2_days = [temp_path + "\\" + name for name in os.listdir(temp_path) if os.path.isdir(os.path.join(temp_path, name))]
-#         valid_s2_days = [day for day in list_s2_days if is_valid_date(day.split("\\")[-1])]
-#         list_s2_images = [[path + "\\" + name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))] for path in valid_s2_days]
-#         list_s2_images = [item for sublist in list_s2_images for item in sublist]
-#         valid_list_s2_images = [imm for imm in list_s2_images if imm[-5:] == ".SAFE"]
-#     elif folder == "S3":
-#         list_s3_days = [temp_path + "\\" + name for name in os.listdir(temp_path) if os.path.isdir(os.path.join(temp_path, name))]
-#         valid_s3_days = [day for day in list_s3_days if is_valid_date(day.split("\\")[-1])]
-#         list_s3_images = [[path + "\\" + name for name in os.listdir(path) if os.path.isdir(os.path.join(path, name))] for path in valid_s3_days]
-#         list_s3_images = [item for sublist in list_s3_images for item in sublist]
-#         valid_list_s3_images = [imm for imm in list_s3_images if imm[-5:] == ".SEN3"]
-
-s2_paths = "output/s2_paths.txt"
-f_s2_paths = open(s2_paths, "w")
-f_s2_paths.write(s2_text)
-f_s2_paths.close()
-
-s3_paths = "output/s3_paths.txt"
-f_s3_paths = open(s3_paths, "w")
-f_s3_paths.write(s3_text)
-f_s3_paths.close()
-
-# print("\tPath files created!\n\t" + s2_paths + "\n\t" + s3_paths)
+if s2_text == "":
+    print("ERROR: no Sentinel 2 images found")
+elif s3_text == "":
+    print("ERROR: no Sentinel 3 images found")    
+else:
+    j = "{\n\t\"data\":\n\t[\n" + s2_text + ",\n" + s3_text + "\n\t]\n}"
+    with open("output/path.json", "w") as f:
+        f.write(j)
