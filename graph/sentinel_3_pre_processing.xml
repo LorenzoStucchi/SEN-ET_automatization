@@ -48,13 +48,7 @@
     </sources>
     <parameters class="com.bc.ceres.binding.dom.XppDomElement">
       <wktFile/>
-      <crs>GEOGCS[&quot;WGS84(DD)&quot;, &#xd;
-  DATUM[&quot;WGS84&quot;, &#xd;
-    SPHEROID[&quot;WGS84&quot;, 6378137.0, 298.257223563]], &#xd;
-  PRIMEM[&quot;Greenwich&quot;, 0.0], &#xd;
-  UNIT[&quot;degree&quot;, 0.017453292519943295], &#xd;
-  AXIS[&quot;Geodetic longitude&quot;, EAST], &#xd;
-  AXIS[&quot;Geodetic latitude&quot;, NORTH]]</crs>
+      <crs>EPSG:4326</crs>
       <resampling>Nearest</resampling>
       <referencePixelX/>
       <referencePixelY/>
@@ -160,7 +154,7 @@
   <applicationData id="Presentation">
     <Description/>
     <node id="Read">
-      <displayPosition x="15.0" y="135.0"/>
+            <displayPosition x="15.0" y="135.0"/>
     </node>
     <node id="Subset">
       <displayPosition x="101.0" y="134.0"/>
@@ -187,7 +181,7 @@
       <displayPosition x="542.0" y="193.0"/>
     </node>
     <node id="Write_LST">
-      <displayPosition x="541.0" y="89.0"/>
+            <displayPosition x="541.0" y="89.0"/>
     </node>
   </applicationData>
 </graph>

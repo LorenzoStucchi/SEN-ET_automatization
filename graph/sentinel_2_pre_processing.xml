@@ -42,6 +42,74 @@
       <copyMetadata>true</copyMetadata>
     </parameters>
   </node>
+  <node id="BiophysicalOp">
+    <operator>BiophysicalOp</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sensor>!INPUT_Sensor_S2!</sensor>
+      <computeLAI>true</computeLAI>
+      <computeFapar>true</computeFapar>
+      <computeFcover>true</computeFcover>
+      <computeCab>true</computeCab>
+      <computeCw>true</computeCw>
+    </parameters>
+  </node>
+  <node id="Write_reflectance">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_reflectance"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_reflectance!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <node id="Subset_reflectance">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>B2,B3,B4,B5,B6,B7,B8A,B11,B12</sourceBands>
+      <region>0,0,5490,5490</region>
+      <referenceBand>B2</referenceBand>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Subset_sun_zenith">
+    <operator>Subset</operator>
+    <sources>
+      <sourceProduct refid="Subset"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands>sun_zenith</sourceBands>
+      <region>0,0,5490,5490</region>
+      <referenceBand>B2</referenceBand>
+      <geoRegion/>
+      <subSamplingX>1</subSamplingX>
+      <subSamplingY>1</subSamplingY>
+      <fullSwath>false</fullSwath>
+      <tiePointGridNames/>
+      <copyMetadata>true</copyMetadata>
+    </parameters>
+  </node>
+  <node id="Write_sun_zenith">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="Subset_sun_zenith"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_sun_zenith_angle!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
   <node id="BandMaths_mask">
     <operator>BandMaths</operator>
     <sources>
@@ -71,10 +139,20 @@
       <formatName>BEAM-DIMAP</formatName>
     </parameters>
   </node>
+  <node id="Write_biophysical">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="BiophysicalOp"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>!OUTPUT_biophysical!</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
   <applicationData id="Presentation">
     <Description/>
     <node id="Read">
-      <displayPosition x="37.0" y="134.0"/>
+            <displayPosition x="37.0" y="134.0"/>
     </node>
     <node id="Resample">
       <displayPosition x="142.0" y="133.0"/>
@@ -82,11 +160,29 @@
     <node id="Subset">
       <displayPosition x="256.0" y="136.0"/>
     </node>
+    <node id="BiophysicalOp">
+      <displayPosition x="371.0" y="75.0"/>
+    </node>
+    <node id="Write_reflectance">
+      <displayPosition x="523.0" y="136.0"/>
+    </node>
+    <node id="Subset_reflectance">
+      <displayPosition x="380.0" y="136.0"/>
+    </node>
+    <node id="Subset_sun_zenith">
+      <displayPosition x="374.0" y="215.0"/>
+    </node>
+    <node id="Write_sun_zenith">
+      <displayPosition x="524.0" y="217.0"/>
+    </node>
     <node id="BandMaths_mask">
       <displayPosition x="369.0" y="276.0"/>
     </node>
     <node id="Write_mask">
       <displayPosition x="523.0" y="277.0"/>
+    </node>
+    <node id="Write_biophysical">
+            <displayPosition x="524.0" y="77.0"/>
     </node>
   </applicationData>
 </graph>
