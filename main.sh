@@ -13,6 +13,6 @@ echo "==================="
 time python3 py_scripts/3.py
 echo "==================="
 time sh output/3_script_S2.sh
-# echo "==================="
-# time sh output/4_script_S3.sh
+echo "==================="
+time sh output/4_script_S3.sh
 #read -r -p "Computation ended sucessfully! Press any key to close the panel" input

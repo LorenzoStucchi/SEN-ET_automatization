@@ -29,14 +29,9 @@ for line in images_file:
         month = date[4:6]
         day = date[6:8]
         if ".SAFE" in line:
-            if "\n" in line:
-                name = line[:-1]
-            else:
-                name = line
-        elif "\n" in line:
-            name = line[:-1] + ".SAFE"
+            name = line.strip()
         else:
-            name = line + ".SAFE"
+            name = line.strip() + ".SAFE"
         if level == "L2A":
             tile = name.split("_")[5]
             if s2_text == "":
@@ -54,14 +49,9 @@ for line in images_file:
         month = date[4:6]
         day = date[6:8]
         if ".SEN3" in line:
-            if "\n" in line:
-                name = line[:-1]
-            else:
-                name = line
-        elif "\n" in line:
-            name = line[:-1] + ".SEN3"
+            name = line.strip()
         else:
-            name = line + ".SEN3"
+            name = line.strip() + ".SEN3"
         if sensor == "LST" and level == "2":
             tile = name[64:81]
             if s3_text == "":
@@ -82,3 +72,5 @@ else:
     j = "{\n\t\"data\":\n\t[\n" + s2_text + ",\n" + s3_text + "\n\t]\n}"
     with open("output/path.json", "w") as f:
         f.write(j)
+
+print("\tPath file created!\n\t output/path.json\n\t")

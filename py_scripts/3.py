@@ -78,12 +78,15 @@ f.close()
 # TODO: extract bbox for each s2 and s3
 
 # TODO: Check combination s2 and s3 based on time and bbox
-combs = [(0,2),(1,2)] # temp
+# for now read from file
+with open("input/combs.txt", "r") as f:
+    combs = f.readlines()
 
 # for each combination create che corrispoding S3 operation
 for comb in combs:
-    s2 = images[comb[0]]
-    s3 = images[comb[1]]
+    comb = comb.strip().split(",")
+    s2 = images[int(comb[0])]
+    s3 = images[int(comb[1])]
 
     year = s3["time"][:4]
     mon = s3["time"][5:7]
@@ -128,7 +131,7 @@ for comb in combs:
     # Write ET as geotiff
     text = text + "echo \"\t Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
-    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_"  + s3["time"] + "_" + s2["tile"] + +".xml"
+    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["time"] + "_" + s2["tile"] + ".xml"
     text = text + "time -v gpt " + path_grapht_et + "\n"
     text = text + "echo \"Saved the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     f = open(path_grapht_et, "w")
