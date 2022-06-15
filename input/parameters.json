@@ -24,7 +24,7 @@
         "data_mining":{
             "cv_homogeneity_threshold": 0.0,
             "moving_window_size": 30,
-            "parallel_jobs": 8
+            "parallel_jobs": 2
         },
         "shortwave_radiation":{
             "soil_ref_vis": 0.15,
