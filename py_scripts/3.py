@@ -37,6 +37,7 @@ soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
 lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
 
 general_path_era_meteo = intermediate_path + "/era/era5.nc"
+general_path_era = intermediate_path + "/era/YYYY/MM/DD/YYYY_MM_DD"
 text = ""
 
 # Command list
@@ -73,3 +74,73 @@ for image in images:
 f = open(path_output_s2, "w")
 f.write(text)
 f.close()
+
+# TODO: extract bbox for each s2 and s3
+
+# TODO: Check combination s2 and s3 based on time and bbox
+combs = [(0,2),(1,2)] # temp
+
+# for each combination create che corrispoding S3 operation
+for comb in combs:
+    s2 = images[comb[0]]
+    s3 = images[comb[1]]
+
+    year = s3["time"][:4]
+    mon = s3["time"][5:7]
+    day = s3["time"][8:10]
+
+    date = s3["time"] + "_" + s3["hour"]
+
+    t_general_path_s2 = s2["derived_product_path"] + "/S2"
+    t_general_path_s3 = s3["derived_product_path"] + "/S3"
+    t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day)
+    t_general_path_out = s3["derived_product_path"] + "/S3"
+    t_general_path_et = s3["derived_product_path"] + "/S3"
+    t_general_path_et_tiff = et_path + "/" + s3["time"] + "_" + s2["tile"] + "_" + s3["tile"]
+
+    text = text + "echo \"\t Warp the image S3 " + date + "\"\n"
+    text = text + cmd_warp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2) + "\n"
+    
+    text = text + "echo \"\t Sharpening the image S3 " + date + "\"\n"
+    text = text + cmd_sharp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("DATA", date.replace("_","-")) + "\n"
+    text = text + "echo \"Sharpened the image S3 " + date + "\"\n"
+    
+    text = text + "echo \"\t Computing the meteo data for the day " + date + "\"\n"
+    text = text + cmd_ecmwf.replace("PATHS2", t_general_path_s2).replace("DATA", date.replace("_","-")).replace("PATHERA", t_general_path_era) + "\n"
+    text = text + "echo \"Computed the meteo data for the day " + date + "\"\n"
+    
+    text = text + "echo \"\t Computing the longwave radiation for the image S3 " + date + "\"\n"
+    text = text + cmd_long.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
+    text = text + "echo \"Computed the longwave radiation for the image S3 " + date + "\"\n"
+    
+    text = text + "echo \"\t Computing the shortwave radiation for the image S3 " + date + "\"\n"
+    text = text + cmd_short.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
+    text = text + "echo \"Computed the shortwave radiation for the image S3 " + date + "\"\n"
+    
+    text = text + "echo \"\t Computing the energy fluxes for the image S3 " + date + "\"\n"
+    text = text + cmd_fluxes.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
+    text = text + "echo \"Computed the energy fluxes for the image S3 " + date + "\"\n"
+    
+    text = text + "echo \"\t Computing the evapotranspiration for the image S3 " + date + "\"\n"
+    text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out).replace("PATHET", t_general_path_et) + "\n"
+    text = text + "echo \"Computed the evapotranspiration for the image S3 " + date + "\"\n"
+    
+    # Write ET as geotiff
+    text = text + "echo \"\t Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
+    text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
+    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_"  + s3["time"] + "_" + s2["tile"] + +".xml"
+    text = text + "time -v gpt " + path_grapht_et + "\n"
+    text = text + "echo \"Saved the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
+    f = open(path_grapht_et, "w")
+    f.write(text_grapht_et)
+    f.close()
+
+    text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
+
+text = text.replace("\\", "\\\\")
+f = open(path_output_s3, "w")
+f.write(text)
+f.close()
+    
+# Show results
+print("\tScripts created!\n\t" + path_output_s2 + "\n\t" + path_output_s3)
