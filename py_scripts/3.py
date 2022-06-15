@@ -94,7 +94,7 @@ for comb in combs:
     mon = s3["time"][5:7]
     day = s3["time"][8:10]
 
-    date = s3["time"] + "_" + s3["hour"]
+    date = s3["time"].replace("_","-") + "_" + s3["hour"]
 
     t_general_path_s2 = s2["derived_product_path"] + "/S2"
     t_general_path_s3 = s3["derived_product_path"] + "/S3"
@@ -107,7 +107,7 @@ for comb in combs:
     text = text + cmd_warp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2) + "\n"
     
     text = text + "echo \"\t Sharpening the image S3 " + date + "\"\n"
-    text = text + cmd_sharp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("DATA", date.replace("_","-")) + "\n"
+    text = text + cmd_sharp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("DATA", date) + "\n"
     text = text + "echo \"Sharpened the image S3 " + date + "\"\n"
     
     text = text + "echo \"\t Computing the meteo data for the day " + date + "\"\n"
