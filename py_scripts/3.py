@@ -94,7 +94,7 @@ for comb in combs:
     mon = s3["time"][5:7]
     day = s3["time"][8:10]
 
-    date = s3["time"].replace("_","-") + "_" + s3["hour"]
+    date = s3["time"].replace("_","-") + " " + s3["hour"]
 
     t_general_path_s2 = s2["derived_product_path"] + "/S2"
     t_general_path_s3 = s3["derived_product_path"] + "/S3"
