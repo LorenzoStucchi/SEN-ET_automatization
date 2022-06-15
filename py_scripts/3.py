@@ -45,7 +45,7 @@ cmd_leaf = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-
 cmd_fracgreen = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/frac_green.py --sza_file PATHS2_sun_zenith_angle.dim --biophysical_file PATHS2_biophysical.dim --min_frac_green " + min_frac_green + " --output_file PATHS2_frac_green.dim"
 cmd_strpar = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/structural_params.py --landcover_map PATHS2_landcover.dim --lai_map PATHS2_biophysical.dim --fgv_map PATHS2_frac_green.dim --landcover_band land_cover_CCILandCover-2015 --lookup_table " + lookup_table + " --produce_vh 1 --produce_fc 1 --produce_chwr 1 --produce_lw 1 --produce_lid 1 --produce_igbp 1 --output_file PATHS2_structural_parameters.dim"
 cmd_aero = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/aerodynamic_roughness.py --lai_map PATHS2_biophysical.dim --landcover_params_map PATHS2_structural_parameters.dim --soil_roughness " + soil_roughness_ae + " --output_file PATHS2_aerodynamic_parameters.dim"
-cmd_warp = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/warp_to_template.py --source PATHS3_obs_geometry.dim --template PATHS2_resampled.dim --resample_algorithm " + algorithm + " --output PATHS3_hr_vza.dim"
+cmd_warp = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/warp_to_template.py --source PATHS3_obs_geometry.dim --template PATHS2_mask.dim --resample_algorithm " + algorithm + " --output PATHS3_hr_vza.dim"
 cmd_sharp = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/data_mining_sharpener.py --sentinel_2_reflectance PATHS2_reflectance.dim --sentinel_3_lst PATHS3_lst.dim --high_res_dem PATHS2_elevation.dim --high_res_geom PATHS3_hr_vza.dim --lst_quality_mask PATHS3_mask.dim --date_time_utc \"DATA\" --elevation_band elevation --lst_good_quality_flags 1 --cv_homogeneity_threshold " + cv_homogeneity_threshold + " --moving_window_size " + moving_window_size + " --parallel_jobs " + parallel_jobs + " --output PATHS3_lst_sharpened.dim"
 cmd_ecmwf = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/ecmwf_data_preparation.py --elevation_map PATHS2_elevation.dim --elevation_band elevation --ecmwf_data_file " + general_path_era_meteo + " --date_time_utc \"DATA\" --time_zone " + time_zone + " --prepare_temperature 1 --prepare_vapour_pressure 1 --prepare_air_pressure 1 --prepare_wind_speed 1 --prepare_clear_sky_solar_radiation 1 --prepare_daily_solar_irradiance 1 --output_file PATHERA_meteo.dim"
 cmd_long = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/longwave_irradiance.py --meteo_product PATHERA_meteo.dim --at_band air_temperature --vp_band vapour_pressure --ap_band air_pressure --at_height 100 --output_file PATHOUT_longwave_ir.dim"
@@ -74,6 +74,8 @@ for image in images:
 f = open(path_output_s2, "w")
 f.write(text)
 f.close()
+
+text = ""
 
 # TODO: extract bbox for each s2 and s3
 
