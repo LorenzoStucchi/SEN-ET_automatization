@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+from shapely.geometry import Polygon
 
 path_param = "input/parameters.json"
 file_path = "output/path_hour.json"
@@ -39,6 +40,9 @@ lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
 general_path_era_meteo = intermediate_path + "/era/era5.nc"
 general_path_era = intermediate_path + "/era/YYYY/MM/DD/YYYY_MM_DD"
 text = ""
+s2_list = []
+s3_list = []
+combs = []
 
 # Command list
 cmd_leaf = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/leaf_spectra.py --biophysical_file PATHS2_biophysical.dim --output_file PATHS2_leaf_spectra.dim"
@@ -69,7 +73,7 @@ for image in images:
         text = text + "echo \"Computed the structural parameters for the image S2 " + date + "_" + tile + "\"\n"
         text = text + "echo \"\t Computing the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n"
         text = text + cmd_aero.replace("PATHS2", t_general_path_s2) + "\n"
-        text = text + "echo \"Computed the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n\n"
+        text = text + "echo \"Computed the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n\n"  
 
 f = open(path_output_s2, "w")
 f.write(text)
@@ -77,23 +81,42 @@ f.close()
 
 text = ""
 
-# TODO: extract bbox for each s2 and s3
+# Check combination s2 and s3 based on time and bbox
+for image in images:
+    if image["platform"] == "S2":
+        for line in open(image["path"], 'r').readlines():
+            if "<EXT_POS_LIST>" in line:
+                b_s2 = line.strip()[14:][:-15].strip().split(" ")
+                break
+        # b_s2 = s2.split(" ")
+        s2_bbox = Polygon([[float(b_s2[i+1]), float(b_s2[i])] for i in range(0,len(b_s2),2)])
+        s2_list.append([int(image["uid"]), s2_bbox])
+    elif image["platform"] == "S3":
+        for line in open(image["path"], 'r').readlines():
+            if "gml:posList" in line:
+                b_s3 = line.strip()[13:][:-14].strip().split(" ")
+                break
+        # b_s3 = s3.split(" ")
+        s3_bbox = Polygon([[float(b_s3[i+1]), float(b_s3[i])] for i in range(0,len(b_s3),2)])
+        s3_list.append([int(image["uid"]), s3_bbox])
 
-# TODO: Check combination s2 and s3 based on time and bbox
-# for now read from file
-with open("input/combs.txt", "r") as f:
-    combs = f.readlines()
+# Spatial control of the couples
+for s2 in s2_list:
+    data_s2 = images[s2[0]]["day"]
+    for s3 in s3_list:
+        data_s3 = images[s3[0]]["day"]
+        delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
+        if s3[1].contains(s2[1]) and delta.days <= 10:
+            combs.append([s2[0], s3[0]])
 
 # for each combination create che corrispoding S3 operation
 for comb in combs:
-    comb = comb.strip().split(",")
-    s2 = images[int(comb[0])]
-    s3 = images[int(comb[1])]
+    s2 = images[comb[0]]
+    s3 = images[comb[1]]
 
     year = s3["day"][:4]
     mon = s3["day"][5:7]
     day = s3["day"][8:10]
-
     date = s3["day"].replace("_","-") + " " + s3["hour"]
 
     t_general_path_s2 = s2["derived_product_path"] + "/S2"
