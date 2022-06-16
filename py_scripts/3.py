@@ -55,7 +55,7 @@ cmd_et = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-sc
 
 for image in images:
     if image["platform"] == "S2":
-        date = image["time"]
+        date = image["day"]
         tile = image["tile"]
         t_general_path_s2 = image["derived_product_path"] + "/S2"
         text = text + "echo \"\t Computing the leaf parameters for the image S2 " + date + "_" + tile + "\"\n"
@@ -90,18 +90,18 @@ for comb in combs:
     s2 = images[int(comb[0])]
     s3 = images[int(comb[1])]
 
-    year = s3["time"][:4]
-    mon = s3["time"][5:7]
-    day = s3["time"][8:10]
+    year = s3["day"][:4]
+    mon = s3["day"][5:7]
+    day = s3["day"][8:10]
 
-    date = s3["time"].replace("_","-") + " " + s3["hour"]
+    date = s3["day"].replace("_","-") + " " + s3["hour"]
 
     t_general_path_s2 = s2["derived_product_path"] + "/S2"
     t_general_path_s3 = s3["derived_product_path"] + "/S3"
     t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day)
     t_general_path_out = s3["derived_product_path"] + "/S3"
     t_general_path_et = s3["derived_product_path"] + "/S3"
-    t_general_path_et_tiff = et_path + "/" + s3["time"] + "_" + s2["tile"] + "_" + s3["tile"]
+    t_general_path_et_tiff = et_path + "/" + s3["day"] + "_" + s2["tile"] + "_" + s3["tile"]
 
     text = text + "echo \"\t Warp the image S3 " + date + "\"\n"
     text = text + cmd_warp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2) + "\n"
@@ -133,7 +133,7 @@ for comb in combs:
     # Write ET as geotiff
     text = text + "echo \"\t Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
-    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["time"] + "_" + s2["tile"] + ".xml"
+    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["day"] + "_" + s2["tile"] + ".xml"
     text = text + "time -v gpt " + path_grapht_et + "\n"
     text = text + "echo \"Saved the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     f = open(path_grapht_et, "w")

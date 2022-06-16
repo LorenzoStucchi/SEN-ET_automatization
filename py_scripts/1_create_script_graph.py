@@ -57,7 +57,7 @@ for image in images:
     # Creation of script and xml file for S3
     if image["platform"] == "S3":
         id_s3 = image["tile"]
-        date = image["time"]
+        date = image["day"]
         path = image["derived_product_path"]
 
         # Processing
@@ -75,7 +75,7 @@ for image in images:
     # Creation of script and xml file for S2
     elif image["platform"] == "S2":
         tile = image["tile"]
-        date = image["time"]
+        date = image["day"]
         path = image["derived_product_path"]
         sensor_s2 = " ".join(image["path"].split("/")[-2:])[:3]
         
