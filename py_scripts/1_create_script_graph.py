@@ -41,15 +41,15 @@ for image in images:
         os.makedirs(path_derived)
     if image["platform"] == "S2":
         try:
-            n = max(n, math.ceil(float(image["aoi"]["n"])))
-            s = min(s, math.floor(float(image["aoi"]["s"])))
-            e = max(e, math.ceil(float(image["aoi"]["e"])))
-            w = min(w, math.floor(float(image["aoi"]["w"])))
+            n = max(n, math.ceil(float(image["bbox"]["n"])))
+            s = min(s, math.floor(float(image["bbox"]["s"])))
+            e = max(e, math.ceil(float(image["bbox"]["e"])))
+            w = min(w, math.floor(float(image["bbox"]["w"])))
         except NameError:
-            n = math.ceil(float(image["aoi"]["n"]))
-            s = math.floor(float(image["aoi"]["s"]))
-            e = math.ceil(float(image["aoi"]["e"]))
-            w = math.floor(float(image["aoi"]["w"]))
+            n = math.ceil(float(image["bbox"]["n"]))
+            s = math.floor(float(image["bbox"]["s"]))
+            e = math.ceil(float(image["bbox"]["e"]))
+            w = math.floor(float(image["bbox"]["w"]))
 
 AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
 
