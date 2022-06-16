@@ -4,7 +4,7 @@ import json
 path_images_file = "input/images.txt"
 path_param = "input/parameters.json"
 
-n = 0
+i = 0
 s2_text = ""
 s3_text = ""
 s2_json_template = "\t\t{ \n\t\t\t\"uid\": UID, \n\t\t\t\"platform\": \"PLATFORM\", \n\t\t\t\"path\": \"PATH\", \n\t\t\t\"derived_product_path\": \"INTERMEDIATE\", \n\t\t\t\"tile\": \"TILEID\", \n\t\t\t\"day\": \"DAY\", \n\t\t\t\"bbox\": {\n\t\t\t\t\"n\": NORTH, \n\t\t\t\t\"s\": SOUTH, \n\t\t\t\t\"e\": EAST, \n\t\t\t\t\"w\": WEST \n\t\t\t} \n\t\t}"
@@ -54,10 +54,10 @@ for line in images_file:
             path = "/eodata/Sentinel-2/" + sensor + "/" + level + "/" + year + "/" + month + "/" + day + "/" + name + "/MTD_MSIL2A.xml"
             n, s, w, e = getbbox(path) 
             if s2_text == "":
-                s2_text = s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day ).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
+                s2_text = s2_json_template.replace("UID", str(i)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day ).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
             else:
-                s2_text = s2_text + ",\n" + s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
-            n = n + 1
+                s2_text = s2_text + ",\n" + s2_json_template.replace("UID", str(i)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
+            i = i + 1
         else:
             print(name + "is not a valid Sentinel-2 L2A image")
     elif sentinel == "S3A" or sentinel == "S3B":
@@ -74,10 +74,10 @@ for line in images_file:
         if sensor == "LST" and level == "2":
             tile = name[64:81]
             if s3_text == "":
-                s3_text = s3_json_template.replace("UID", str(n)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
+                s3_text = s3_json_template.replace("UID", str(i)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
             else:
-                s3_text = s3_text + ",\n" + s3_json_template.replace("UID", str(n)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
-            n = n + 1
+                s3_text = s3_text + ",\n" + s3_json_template.replace("UID", str(i)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
+            i = i + 1
         else:
             print(name + "is not a valid Sentinel-3 LST image")
 
