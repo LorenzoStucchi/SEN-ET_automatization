@@ -52,7 +52,7 @@ for line in images_file:
         if level == "L2A":
             tile = name.split("_")[5]
             path = "/eodata/Sentinel-2/" + sensor + "/" + level + "/" + year + "/" + month + "/" + day + "/" + name + "/MTD_MSIL2A.xml"
-            n, s, w, e = getbbox(path) 
+            n, s, e, w = getbbox(path) 
             if s2_text == "":
                 s2_text = s2_json_template.replace("UID", str(i)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day ).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
             else:
