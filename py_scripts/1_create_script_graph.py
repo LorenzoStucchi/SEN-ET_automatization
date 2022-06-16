@@ -1,5 +1,6 @@
 import json
 import os
+import math
 
 path_param = "input/parameters.json"
 path_file_path = "output/path.json"
@@ -13,7 +14,6 @@ path_script_s2 = "output/2_script_gpt_s2.sh"
 # Definition of general varibles
 with open(path_param, "r") as f:
     param = json.load(f)
-AOI_WTK = "POLYGON ((" + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["est"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["south"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + ", " + str(param["AOI"]["west"]) + " " + str(param["AOI"]["north"]) + "))"
 intermediate_output_path = param["temp_files"]
 with open(path_file_path, "r") as f:
     images = json.load(f)["data"]
@@ -39,7 +39,19 @@ for image in images:
     path_derived = image["derived_product_path"]  + "/graph"
     if os.path.isdir(path_derived) == False:
         os.makedirs(path_derived)
+    if image["platform"] == "S2":
+        try:
+            n = max(n, math.ceil(float(image["aoi"]["n"])))
+            s = min(s, math.floor(float(image["aoi"]["s"])))
+            e = max(e, math.ceil(float(image["aoi"]["e"])))
+            w = min(w, math.floor(float(image["aoi"]["w"])))
+        except NameError:
+            n = math.ceil(float(image["aoi"]["n"]))
+            s = math.floor(float(image["aoi"]["s"]))
+            e = math.ceil(float(image["aoi"]["e"]))
+            w = math.floor(float(image["aoi"]["w"]))
 
+AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
 
 for image in images:
     # Creation of script and xml file for S3
