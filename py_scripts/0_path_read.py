@@ -20,8 +20,6 @@ def getbbox(path_image):
     e = float(bbox[1])
     w = float(bbox[1])
     for i in range(2,len(bbox),2):
-        print(n,s,e,w)
-        print(bbox[i], bbox[i+1])
         n = max(n, float(bbox[i]))
         s = min(s, float(bbox[i]))
         e = max(e, float(bbox[i+1]))
@@ -56,9 +54,9 @@ for line in images_file:
             path = "/eodata/Sentinel-2/" + sensor + "/" + level + "/" + year + "/" + month + "/" + day + "/" + name + "/MTD_MSIL2A.xml"
             n, s, w, e = getbbox(path) 
             if s2_text == "":
-                s2_text = s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day ).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EST", str(e))
+                s2_text = s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day ).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
             else:
-                s2_text = s2_text + ",\n" + s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EST", str(e))
+                s2_text = s2_text + ",\n" + s2_json_template.replace("UID", str(n)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
             n = n + 1
         else:
             print(name + "is not a valid Sentinel-2 L2A image")
