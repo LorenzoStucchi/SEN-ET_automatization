@@ -8,7 +8,6 @@ path_file_datetime = "output/path_hour.json"
 # Definition of general varibles
 with open(file_param, "r") as f:
     p = json.load(f)
-# general_path = p["general_path"]
 
 with open(file_path, "r") as f:
     images = json.load(f)["data"]

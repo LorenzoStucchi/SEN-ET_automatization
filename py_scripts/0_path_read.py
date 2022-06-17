@@ -59,7 +59,7 @@ for line in images_file:
                 s2_text = s2_text + ",\n" + s2_json_template.replace("UID", str(i)).replace("PLATFORM", "S2").replace("PATH", path).replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day).replace("NORTH", str(n)).replace("SOUTH", str(s)).replace("WEST", str(w)).replace("EAST", str(e))
             i = i + 1
         else:
-            print(name + "is not a valid Sentinel-2 L2A image")
+            print(line.strip() + " is not a valid Sentinel-2 L2A image")
     elif sentinel == "S3A" or sentinel == "S3B":
         level = components[2]
         sensor = components[3]
@@ -71,15 +71,20 @@ for line in images_file:
             name = line.strip()
         else:
             name = line.strip() + ".SEN3"
-        if sensor == "LST" and level == "2":
-            tile = name[64:81]
+        tile = name[64:81]
+        if tile[13:17] == "____":
+            print("The procedure works only with Sentinel-3 \"frames\" images, the Sentinel-3 \"stripes\" images present issues in the definition of the bounding box")
+            print("So the image " + line.strip() + " will not be used")
+        elif sensor == "LST" and level == "2":
             if s3_text == "":
                 s3_text = s3_json_template.replace("UID", str(i)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
             else:
                 s3_text = s3_text + ",\n" + s3_json_template.replace("UID", str(i)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
             i = i + 1
         else:
-            print(name + "is not a valid Sentinel-3 LST image")
+            print(line.strip() + " is not a valid Sentinel-3 LST image")
+    else:
+        print(line.strip() + " is not a valid Sentinel image")
 
 images_file.close()
 
