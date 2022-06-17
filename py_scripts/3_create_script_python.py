@@ -38,7 +38,7 @@ soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
 lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
 
 general_path_era_meteo = intermediate_path + "/era/era5.nc"
-general_path_era = intermediate_path + "/era/YYYY/MM/DD/YYYY_MM_DD"
+general_path_era = intermediate_path + "/era/TILE/YYYY/MM/DD/"
 text = ""
 s2_list = []
 s3_list = []
@@ -51,7 +51,7 @@ cmd_strpar = "time " + python_path + "/bin/python " + python_path + "/sen-et-sna
 cmd_aero = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/aerodynamic_roughness.py --lai_map PATHS2_biophysical.dim --landcover_params_map PATHS2_structural_parameters.dim --soil_roughness " + soil_roughness_ae + " --output_file PATHS2_aerodynamic_parameters.dim"
 cmd_warp = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/warp_to_template.py --source PATHS3_obs_geometry.dim --template PATHS2_mask.dim --resample_algorithm " + algorithm + " --output PATHS3_hr_vza.dim"
 cmd_sharp = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/data_mining_sharpener.py --sentinel_2_reflectance PATHS2_reflectance.dim --sentinel_3_lst PATHS3_lst.dim --high_res_dem PATHS2_elevation.dim --high_res_geom PATHS3_hr_vza.dim --lst_quality_mask PATHS3_mask.dim --date_time_utc \"DATA\" --elevation_band elevation --lst_good_quality_flags 1 --cv_homogeneity_threshold " + cv_homogeneity_threshold + " --moving_window_size " + moving_window_size + " --parallel_jobs " + parallel_jobs + " --output PATHS3_lst_sharpened.dim"
-cmd_ecmwf = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/ecmwf_data_preparation.py --elevation_map PATHS2_elevation.dim --elevation_band elevation --ecmwf_data_file " + general_path_era_meteo + " --date_time_utc \"DATA\" --time_zone " + time_zone + " --prepare_temperature 1 --prepare_vapour_pressure 1 --prepare_air_pressure 1 --prepare_wind_speed 1 --prepare_clear_sky_solar_radiation 1 --prepare_daily_solar_irradiance 1 --output_file PATHERA_meteo.dim"
+cmd_ecmwf = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/ecmwf_data_preparation.py --elevation_map PATHS2_elevation.dim --elevation_band elevation --ecmwf_data_file " + general_path_era_meteo + " --date_time_utc \"DATA\" --time_zone " + time_zone + " --prepare_temperature 1 --prepare_vapour_pressure 1 --prepare_air_pressure 1 --prepare_wind_speed 1 --prepare_clear_sky_solar_radiation 1 --prepare_daily_solar_irradiance 1 --output_file PATHERAmeteo.dim"
 cmd_long = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/longwave_irradiance.py --meteo_product PATHERA_meteo.dim --at_band air_temperature --vp_band vapour_pressure --ap_band air_pressure --at_height 100 --output_file PATHOUT_longwave_ir.dim"
 cmd_short = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/net_shortwave_radiation.py --lsp_product PATHS2_leaf_spectra.dim --lai_product PATHS2_biophysical.dim --csp_product PATHS2_structural_parameters.dim --mi_product PATHERA_meteo.dim --sza_product PATHS3_hr_vza.dim --soil_ref_vis " + soil_ref_vis + " --soil_ref_nir " + soil_ref_nir + " --output_file PATHOUT_shortwave_ra.dim"
 cmd_fluxes = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/energy_fluxes.py --lst PATHS3_lst_sharpened.dim --lst_vza PATHS3_hr_vza.dim --lai PATHS2_biophysical.dim --csp PATHS2_structural_parameters.dim --fgv PATHS2_frac_green.dim --ar PATHS2_aerodynamic_parameters.dim --mi PATHERA_meteo.dim --nsr PATHOUT_shortwave_ra.dim --li PATHOUT_longwave_ir.dim --mask PATHS2_mask.dim --soil_roughness " + soil_roughness_en + " --alpha_pt " + alpha_pt + " --atmospheric_measurement_height 100 --green_vegetation_emissivity " + green_vegetation_emissivity + " --soil_emissivity " + soil_emissivity + " --save_component_fluxes 1 --save_component_temperature 1 --save_aerodynamic_parameters 1 --output_file PATHOUT_instantaneous_fluxes.dim"
@@ -121,7 +121,7 @@ for comb in combs:
 
     t_general_path_s2 = s2["derived_product_path"] + "/S2"
     t_general_path_s3 = s3["derived_product_path"] + "/S3"
-    t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day)
+    t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day).replace("TILE", s2["tile"])
     t_general_path_out = s3["derived_product_path"] + "/S3"
     t_general_path_et = s3["derived_product_path"] + "/S3"
     t_general_path_et_tiff = et_path + "/" + s3["day"] + "_" + s2["tile"] + "_" + s3["tile"]
