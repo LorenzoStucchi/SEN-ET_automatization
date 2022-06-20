@@ -72,10 +72,7 @@ for line in images_file:
         else:
             name = line.strip() + ".SEN3"
         tile = name[64:81]
-        if tile[13:17] == "____":
-            print("The procedure works only with Sentinel-3 \"frames\" images, the Sentinel-3 \"stripes\" images present issues in the definition of the bounding box")
-            print("So the image " + line.strip() + " will not be used")
-        elif sensor == "LST" and level == "2":
+        if sensor == "LST" and level == "2":
             if s3_text == "":
                 s3_text = s3_json_template.replace("UID", str(i)).replace("PLATFORM", "S3").replace("PATH", "/eodata/Sentinel-3/SLSTR/SL_2_LST/" + year + "/" + month + "/" + day + "/" + name + "/xfdumanifest.xml").replace("TILEID", tile).replace("DAY", year + "_" + month + "_" + day).replace("INTERMEDIATE", intermediate_output_path + "/"  + tile + "/" + year + "/" + month + "/" + day)
             else:

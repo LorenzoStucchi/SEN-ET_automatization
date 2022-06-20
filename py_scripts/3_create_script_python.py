@@ -2,6 +2,31 @@ from datetime import datetime
 import json
 from shapely.geometry import Polygon
 
+def extract_s3_bbox(coord_list):
+    x = []
+    y = []
+    for i in range(0,len(coord_list),2):
+        x.append(float(coord_list[i+1]))
+        y.append(float(coord_list[i]))
+    x1 = []
+    x2 = []
+    k1 = 0
+    k2 = -360
+    zip_object = zip(x[:-1], x[1:])
+    for list1_i, list2_i in zip_object:
+        l_diff = list1_i-list2_i
+        if l_diff < -180:
+            k1 = 0
+            k2 = -360
+        elif l_diff > 180:
+            k1 = 360
+            k2 = 0
+        x1.append(list2_i + k1)
+        x2.append(list2_i + k2)
+    x1.append(x1[0])
+    x2.append(x2[0])
+    return Polygon([[x1[i], y[i]] for i in range(0,len(x1),2)]), Polygon([[x2[i], y[i]] for i in range(0,len(x2),2)])
+
 path_param = "input/parameters.json"
 file_path = "output/path_hour.json"
 path_output_s2 = "output/3_script_S2.sh"
@@ -88,7 +113,6 @@ for image in images:
             if "<EXT_POS_LIST>" in line:
                 b_s2 = line.strip()[14:][:-15].strip().split(" ")
                 break
-        # b_s2 = s2.split(" ")
         s2_bbox = Polygon([[float(b_s2[i+1]), float(b_s2[i])] for i in range(0,len(b_s2),2)])
         s2_list.append([int(image["uid"]), s2_bbox])
     elif image["platform"] == "S3":
@@ -96,9 +120,8 @@ for image in images:
             if "gml:posList" in line:
                 b_s3 = line.strip()[13:][:-14].strip().split(" ")
                 break
-        # b_s3 = s3.split(" ")
-        s3_bbox = Polygon([[float(b_s3[i+1]), float(b_s3[i])] for i in range(0,len(b_s3),2)])
-        s3_list.append([int(image["uid"]), s3_bbox])
+        s3_bbox, s3_bbox_alt = extract_s3_bbox(b_s3)
+        s3_list.append([int(image["uid"]), s3_bbox, s3_bbox_alt])
 
 # Spatial control of the couples
 for s2 in s2_list:
@@ -106,7 +129,7 @@ for s2 in s2_list:
     for s3 in s3_list:
         data_s3 = images[s3[0]]["day"]
         delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
-        if s3[1].contains(s2[1]) and delta.days <= 10:
+        if ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) and delta.days <= 10:
             combs.append([s2[0], s3[0]])
 
 # for each combination create che corrispoding S3 operation
