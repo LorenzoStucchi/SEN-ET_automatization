@@ -62,7 +62,7 @@ green_vegetation_emissivity = str(p["comp_parameters"]["energy_fluxes"]["green_v
 soil_emissivity = str(p["comp_parameters"]["energy_fluxes"]["soil_emissivity"])
 lookup_table = python_path + "/sen-et-snap-scripts/auxdata/LUT/ESA_CCI_LUT.csv"
 
-general_path_era_meteo = intermediate_path + "/era/era5.nc"
+general_path_era_meteo = "input/era/era5.nc"
 general_path_era = intermediate_path + "/era/TILE/YYYY/MM/DD/"
 text = ""
 s2_list = []
