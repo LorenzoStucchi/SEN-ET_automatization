@@ -14,7 +14,7 @@ with open(file_path, "r") as f:
 
 for image in images:
     if image["platform"] == "S3":
-        path = image["derived_product_path"] + "/mask.dim"
+        path = image["derived_product_path"] + "/S3_mask.dim"
         for line in open(path, 'r').readlines():
             if "PRODUCT_SCENE_RASTER_START_TIME" in line:
                 data_start = line.split(">")[1].split("<")[0]
