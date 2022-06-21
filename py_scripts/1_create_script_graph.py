@@ -62,9 +62,9 @@ for image in images:
 
         # Processing
         script_text_s3 = script_text_s3 + "echo \"\t Processing the image S3 " + date + "_" + id_s3 + "\"\n"
-        obs_image = path + "/S3_obs_geometry.dim"
-        mask_image = path + "/S3_mask.dim"
-        lst_image = path + "/S3_lst.dim"
+        obs_image = path + "/obs_geometry.dim"
+        mask_image = path + "/mask.dim"
+        lst_image = path + "/lst.dim"
         text_s3_pro = graph_s3_pro.replace("!INPUT_Sentinel-3_LST!", image["path"]).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_observation_geometry!", obs_image).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_LST!", lst_image)
         path_s3_pro = path + "/graph/" + "sentinel_3_preprocessing_"  + date + "_" + id_s3 +".xml"
         script_text_s3 = script_text_s3 + "time gpt " + path_s3_pro + "\n" + "\n\n"
@@ -81,11 +81,11 @@ for image in images:
         
         # Processing
         script_text_s2 = script_text_s2 + "echo \"\t Processing the image S2 " + date + "_" + tile + "\"\n"
-        mask_image = path + "/S2_mask.dim"
-        bio_image = path + "/S2_biophysical.dim"
-        refl_image = path + "/S2_reflectance.dim"
-        resample_image = path + "/S2_resampled.dim"
-        zen_image = path + "/S2_sun_zenith_angle.dim"
+        mask_image = path + "/mask.dim"
+        bio_image = path + "/biophysical.dim"
+        refl_image = path + "/reflectance.dim"
+        resample_image = path + "/resampled.dim"
+        zen_image = path + "/sun_zenith_angle.dim"
         text_s2_pro = graph_s2_pro.replace("!INPUT_Sentinel-2_L2A!", image["path"]).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_biophysical!", bio_image).replace("!INPUT_Sensor_S2!", sensor_s2).replace("!OUTPUT_reflectance!", refl_image).replace("!OUTPUT_resampled!", resample_image).replace("!OUTPUT_sun_zenith_angle!", zen_image)
         path_s2_pro = path + "/graph/" + "sentinel_2_pre_processing_"  + date + "_" + tile +".xml"
         script_text_s2 = script_text_s2 + "time gpt " + path_s2_pro + "\n"
@@ -95,7 +95,7 @@ for image in images:
         
         # Landcover
         script_text_s2 = script_text_s2 + "echo \"\t Computing the landcover for the image S2 " + date + "\"\n"
-        LC_image = path + "/S2_landcover.dim"
+        LC_image = path + "/landcover.dim"
         text_LC = graph_LC.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_CCI_landcover!", LC_image)
         path_LC = path + "/graph/" + "add_landcover_"  + date + "_" + tile +".xml"
         script_text_s2 = script_text_s2 + "time gpt " + path_LC + "\n"
@@ -106,7 +106,7 @@ for image in images:
 
         # Elevation
         script_text_s2 = script_text_s2 + "echo \"\t Computing the elevation for the image S2 " + date + "_" + tile + "\"\n"
-        ele_image = path + "/S2_elevation.dim"
+        ele_image = path + "/elevation.dim"
         text_ele = graph_ele.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_SRTM_elevation!", ele_image)
         path_ele = path + "/graph/" + "add_elevation_"  + date + "_" + tile +".xml"
         script_text_s2 = script_text_s2 + "time gpt " + path_ele + "\n" 
