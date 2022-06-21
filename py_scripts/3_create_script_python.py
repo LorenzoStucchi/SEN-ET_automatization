@@ -131,6 +131,8 @@ for s2 in s2_list:
         delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
         if ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) and delta.days <= 10:
             combs.append([s2[0], s3[0]])
+        else:
+            print(str([s2[0], s3[0]]) + " is not a valid combination")
 
 # for each combination create che corrispoding S3 operation
 for comb in combs:
@@ -179,7 +181,7 @@ for comb in combs:
     # Write ET as geotiff
     text = text + "echo \"\t Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
-    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["day"] + "_" + s2["tile"] + ".xml"
+    path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["day"] + "_" + s3["tile"] + "_" + s2["tile"] + ".xml"
     text = text + "time -v gpt " + path_grapht_et + "\n"
     text = text + "echo \"Saved the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     f = open(path_grapht_et, "w")
