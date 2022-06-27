@@ -129,8 +129,10 @@ for s2 in s2_list:
     for s3 in s3_list:
         data_s3 = images[s3[0]]["day"]
         delta = abs(datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d"))
-        if ( ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) or ( s3[1].intersects(s2[1]) or s3[2].intersects(s2[1]) ) ) and delta.days <= 10:
-            combs.append([s2[0], s3[0], s2[2]+s3[3]])
+        if delta.days <= 10 and ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) :
+            combs.append([s2[0], s3[0], s2[2]+s3[3], "C"])
+        elif delta.days <= 10 and ( s3[1].intersects(s2[1]) or s3[2].intersects(s2[1]) ):
+            combs.append([s2[0], s3[0], s2[2]+s3[3], "I"])
         else:
             print(str([s2[0], s3[0]]) + " is not a valid combination")
 
@@ -154,7 +156,27 @@ while i < a:
         a = a - 1
     else:
         i = i + 1
-        
+
+a = len(sorted_combs) - 1
+i = 0
+while i < a:
+    if sorted_combs[i][2][:6] == sorted_combs[i+1][2][:6]:
+        s2 = images[sorted_combs[i][0]]
+        s3_1 = images[sorted_combs[i][1]]
+        s3_2 = images[sorted_combs[i+1][1]]
+        delta = abs(datetime.strptime(s3_1["day"], "%Y_%m_%d") - datetime.strptime(s3_2["day"], "%Y_%m_%d"))
+        if delta_1.days == 0:
+            if sorted_combs[i][3] == "C" and sorted_combs[i][3] == "C":
+                print("Two valid S3 images for S2 image :" + str(sorted_combs[i][0]))
+                print("The operation will be executed twice, this will require more time for an not usefull result")
+            elif sorted_combs[i][3] == "I": 
+                sorted_combs.pop(i)
+                a = a - 1
+            else:
+                sorted_combs.pop(i+1)
+                a = a - 1
+    else:
+        i = i + 1
 combs = sorted(sorted(sorted_combs, key=lambda x:x[0]), key=lambda x:x[1])
 print(combs)
 # for each combination create che corrispoding S3 operation
