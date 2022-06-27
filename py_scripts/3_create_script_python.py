@@ -81,24 +81,23 @@ cmd_long = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-
 cmd_short = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/net_shortwave_radiation.py --lsp_product PATHS2_leaf_spectra.dim --lai_product PATHS2_biophysical.dim --csp_product PATHS2_structural_parameters.dim --mi_product PATHERAmeteo.dim --sza_product PATHS3_hr_vza.dim --soil_ref_vis " + soil_ref_vis + " --soil_ref_nir " + soil_ref_nir + " --output_file PATHOUT_shortwave_ra.dim"
 cmd_fluxes = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/energy_fluxes.py --lst PATHS3_lst_sharpened.dim --lst_vza PATHS3_hr_vza.dim --lai PATHS2_biophysical.dim --csp PATHS2_structural_parameters.dim --fgv PATHS2_frac_green.dim --ar PATHS2_aerodynamic_parameters.dim --mi PATHERAmeteo.dim --nsr PATHOUT_shortwave_ra.dim --li PATHOUT_longwave_ir.dim --mask PATHS2_mask.dim --soil_roughness " + soil_roughness_en + " --alpha_pt " + alpha_pt + " --atmospheric_measurement_height 100 --green_vegetation_emissivity " + green_vegetation_emissivity + " --soil_emissivity " + soil_emissivity + " --save_component_fluxes 1 --save_component_temperature 1 --save_aerodynamic_parameters 1 --output_file PATHOUT_instantaneous_fluxes.dim"
 cmd_et = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/daily_evapotranspiration.py --ief_file PATHOUT_instantaneous_fluxes.dim --mi_file PATHERAmeteo.dim --output_file PATHET_daily_evapotranspiration.dim"
-
+i = 1
 for image in images:
     if image["platform"] == "S2":
         date = image["day"]
         tile = image["tile"]
         t_general_path_s2 = image["derived_product_path"] + "/S2"
-        text = text + "echo \"\t Computing the leaf parameters for the image S2 " + date + "_" + tile + "\"\n"
+        text = text + "echo \"\tS2 " + str(i) + "/TOTALITERATION Computing the leaf parameters for the image S2 " + date + "_" + tile + "\"\n"
         text = text + cmd_leaf.replace("PATHS2", t_general_path_s2) + "\n"
-        text = text + "echo \"Computed the leaf parameters for the image S2 " + date + "_" + tile + "\"\n"
-        text = text + "echo \"\t Computing the fraction of green for the image S2 " + date + "_" + tile + "\"\n"
+        text = text + "echo \"\tS2 " + str(i+1) + "/TOTALITERATION Computing the fraction of green for the image S2 " + date + "_" + tile + "\"\n"
         text = text + cmd_fracgreen.replace("PATHS2", t_general_path_s2) + "\n"
-        text = text + "echo \"Computed the fraction of green for the image S2 " + date + "_" + tile + "\"\n"
-        text = text + "echo \"\t Computing the structural parameters for the image S2 " + date + "_" + tile + "\"\n"
+        text = text + "echo \"\tS2 " + str(i+2) + "/TOTALITERATION Computing the structural parameters for the image S2 " + date + "_" + tile + "\"\n"
         text = text + cmd_strpar.replace("PATHS2", t_general_path_s2) + "\n"
-        text = text + "echo \"Computed the structural parameters for the image S2 " + date + "_" + tile + "\"\n"
-        text = text + "echo \"\t Computing the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n"
+        text = text + "echo \"\tS2 " + str(i+3) + "/TOTALITERATION Computing the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n"
         text = text + cmd_aero.replace("PATHS2", t_general_path_s2) + "\n"
-        text = text + "echo \"Computed the aerodynamic parameters for the image S2 " + date + "_" + tile + "\"\n\n"  
+        i = i + 4
+
+text = text.replace("TOTALITERATION", str(i-4))
 
 f = open(path_output_s2, "w")
 f.write(text)
@@ -138,7 +137,6 @@ for s2 in s2_list:
 
 
 # check double couples for s3 tile and s2 tile, choose the one with closer date
-print(combs)
 sorted_combs = sorted(combs, key=lambda x:x[2])
 a = len(sorted_combs) - 1
 i = 0
@@ -174,11 +172,9 @@ while i < a:
                 print("The operation will be executed twice, this will require more time for an not usefull result")
                 i = i + 1
             elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "C":
-                print("Delete")
                 sorted_combs.pop(i)
                 a = a - 1
             elif sorted_combs[i][3] == "C" and sorted_combs[i+1][3] == "I":
-                print("Delete")
                 sorted_combs.pop(i+1)
                 a = a - 1
         else:
@@ -186,8 +182,9 @@ while i < a:
     else:
         i = i + 1
 combs = sorted(sorted(sorted_combs, key=lambda x:x[0]), key=lambda x:x[1])
-print(combs)
+
 # for each combination create che corrispoding S3 operation
+i = 1
 for comb in combs:
     s2 = images[comb[0]]
     s3 = images[comb[1]]
@@ -204,45 +201,40 @@ for comb in combs:
     t_general_path_et = s3["derived_product_path"] + "/S3"
     t_general_path_et_tiff = et_path + "/" + s3["day"] + "_" + s2["tile"] + "_" + s3["tile"]
 
-    text = text + "echo \"\t Warp the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i) + "/TOTALITERATION Warp the image S3 " + date + "\"\n"
     text = text + cmd_warp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2) + "\n"
     
-    text = text + "echo \"\t Sharpening the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+1) + "/TOTALITERATION Sharpening the image S3 " + date + "\"\n"
     text = text + cmd_sharp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("DATA", date) + "\n"
-    text = text + "echo \"Sharpened the image S3 " + date + "\"\n"
     
-    text = text + "echo \"\t Computing the meteo data for the day " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+2) + "/TOTALITERATION Computing the meteo data for the day " + date + "\"\n"
     text = text + cmd_ecmwf.replace("PATHS2", t_general_path_s2).replace("DATA", date.replace("_","-")).replace("PATHERA", t_general_path_era) + "\n"
-    text = text + "echo \"Computed the meteo data for the day " + date + "\"\n"
     
-    text = text + "echo \"\t Computing the longwave radiation for the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+3) + "/TOTALITERATION Computing the longwave radiation for the image S3 " + date + "\"\n"
     text = text + cmd_long.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
-    text = text + "echo \"Computed the longwave radiation for the image S3 " + date + "\"\n"
     
-    text = text + "echo \"\t Computing the shortwave radiation for the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+4) + "/TOTALITERATION Computing the shortwave radiation for the image S3 " + date + "\"\n"
     text = text + cmd_short.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
-    text = text + "echo \"Computed the shortwave radiation for the image S3 " + date + "\"\n"
     
-    text = text + "echo \"\t Computing the energy fluxes for the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+5) + "/TOTALITERATION Computing the energy fluxes for the image S3 " + date + "\"\n"
     text = text + cmd_fluxes.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2).replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out) + "\n"
-    text = text + "echo \"Computed the energy fluxes for the image S3 " + date + "\"\n"
     
-    text = text + "echo \"\t Computing the evapotranspiration for the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+6) + "/TOTALITERATION Computing the evapotranspiration for the image S3 " + date + "\"\n"
     text = text + cmd_et.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out).replace("PATHET", t_general_path_et) + "\n"
-    text = text + "echo \"Computed the evapotranspiration for the image S3 " + date + "\"\n"
     
     # Write ET as geotiff
-    text = text + "echo \"\t Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
+    text = text + "echo \"\t S3 " + str(i+7) + "/TOTALITERATION Saving the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     text_grapht_et = graph_et.replace("!INPUT_et_DIM!", t_general_path_et + "_daily_evapotranspiration.dim").replace("!OUTPUT_et_GEOTIFF!", t_general_path_et_tiff + "_daily_evapotranspiration.tif")
     path_grapht_et = s2["derived_product_path"] + "/graph/et_tiff_saving_" + s3["day"] + "_" + s3["tile"] + "_" + s2["tile"] + ".xml"
     text = text + "time -v gpt " + path_grapht_et + "\n"
-    text = text + "echo \"Saved the evapotranspiration maps into TIFF for the image S3 " + date + "\"\n"
     f = open(path_grapht_et, "w")
     f.write(text_grapht_et)
     f.close()
 
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
+    i = i + 8
 
+text = text.replace("TOTALITERATION", str(i-8))
 if p["remove_temp_files_at_end"] == "Y":
     text = text + "time rm -rf " + intermediate_path + "/*"
 f = open(path_output_s3, "w")
