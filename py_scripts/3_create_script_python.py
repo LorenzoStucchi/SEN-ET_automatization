@@ -128,7 +128,7 @@ for s2 in s2_list:
     data_s2 = images[s2[0]]["day"]
     for s3 in s3_list:
         data_s3 = images[s3[0]]["day"]
-        delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
+        delta = abs(datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d"))
         if ( ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) or ( s3[1].intersects(s2[1]) or s3[2].intersects(s2[1]) ) ) and delta.days <= 10:
             combs.append([s2[0], s3[0], s2[2]+s3[3]])
         else:
@@ -145,8 +145,8 @@ while i < a:
         s2_1 = images[sorted_combs[i][0]]["day"]
         s2_2 = images[sorted_combs[i+1][0]]["day"]
         s3 = images[sorted_combs[i][1]]["day"]
-        delta_1 = datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_1, "%Y_%m_%d")
-        delta_2 = datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_2, "%Y_%m_%d")
+        delta_1 = abs(datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_1, "%Y_%m_%d"))
+        delta_2 = abs(datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_2, "%Y_%m_%d"))
         if delta_1.days >= delta_2.days:
             sorted_combs.pop(i)
         else:
