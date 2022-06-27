@@ -114,14 +114,14 @@ for image in images:
                 b_s2 = line.strip()[14:][:-15].strip().split(" ")
                 break
         s2_bbox = Polygon([[float(b_s2[i+1]), float(b_s2[i])] for i in range(0,len(b_s2),2)])
-        s2_list.append([int(image["uid"]), s2_bbox])
+        s2_list.append([int(image["uid"]), s2_bbox, image["tile"]])
     elif image["platform"] == "S3":
         for line in open(image["path"], 'r').readlines():
             if "gml:posList" in line:
                 b_s3 = line.strip()[13:][:-14].strip().split(" ")
                 break
         s3_bbox, s3_bbox_alt = extract_s3_bbox(b_s3)
-        s3_list.append([int(image["uid"]), s3_bbox, s3_bbox_alt])
+        s3_list.append([int(image["uid"]), s3_bbox, s3_bbox_alt, image["tile"]])
 
 # Spatial control of the couples
 for s2 in s2_list:
@@ -130,9 +130,31 @@ for s2 in s2_list:
         data_s3 = images[s3[0]]["day"]
         delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
         if ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) and delta.days <= 10:
-            combs.append([s2[0], s3[0]])
+            combs.append([s2[0], s3[0], s2[2]+s3[3]])
         else:
             print(str([s2[0], s3[0]]) + " is not a valid combination")
+
+
+# check double couples for s3 tile and s2 tile, choose the one with closer date
+sorted_combs = sorted(combs, key=lambda x:x[2])
+a = len(sorted_combs) - 1
+i = 0
+while i < a:
+    if sorted_combs[i][2] == sorted_combs[i+1][2]:
+        s2_1 = images[sorted_combs[i][0]]["day"]
+        s2_2 = images[sorted_combs[i+1][0]]["day"]
+        s3 = images[sorted_combs[i][1]]["day"]
+        delta_1 = datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_1, "%Y_%m_%d")
+        delta_2 = datetime.strptime(s3, "%Y_%m_%d") - datetime.strptime(s2_2, "%Y_%m_%d")
+        if delta_1.days >= delta_2.days:
+            sorted_combs.pop(i)
+        else:
+            sorted_combs.pop(i+1)
+        a = a - 1
+    else:
+        i = i + 1
+        
+combs = sorted(sorted(sorted_combs, key=lambda x:x[0]), key=lambda x:x[1])
 
 # for each combination create che corrispoding S3 operation
 for comb in combs:
