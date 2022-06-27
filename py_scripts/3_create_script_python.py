@@ -174,9 +174,11 @@ while i < a:
                 print("The operation will be executed twice, this will require more time for an not usefull result")
                 i = i + 1
             elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "C":
+                print("Delete")
                 sorted_combs.pop(i)
                 a = a - 1
             elif sorted_combs[i][3] == "C" and sorted_combs[i+1][3] == "I":
+                print("Delete")
                 sorted_combs.pop(i+1)
                 a = a - 1
         else:
