@@ -166,14 +166,21 @@ while i < a:
         delta = abs(datetime.strptime(s3_1, "%Y_%m_%d") - datetime.strptime(s3_2, "%Y_%m_%d"))
         if delta.days == 0:
             if sorted_combs[i][3] == "C" and sorted_combs[i+1][3] == "C":
-                print("Two valid S3 images for S2 image :" + str(sorted_combs[i][0]))
+                print("Two valid S3 images contains S2 image: " + str(sorted_combs[i][0]) + " for day " + s3_1)
                 print("The operation will be executed twice, this will require more time for an not usefull result")
-            elif sorted_combs[i][3] == "I": 
+                i = i + 1
+            elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "I": 
+                print("Two valid S3 images intersect S2 image: " + str(sorted_combs[i][0]) + " for day " + s3_1)
+                print("The operation will be executed twice, this will require more time for an not usefull result")
+                i = i + 1
+            elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "C":
                 sorted_combs.pop(i)
                 a = a - 1
-            else:
+            elif sorted_combs[i][3] == "C" and sorted_combs[i+1][3] == "I":
                 sorted_combs.pop(i+1)
                 a = a - 1
+        else:
+            i = i + 1
     else:
         i = i + 1
 combs = sorted(sorted(sorted_combs, key=lambda x:x[0]), key=lambda x:x[1])
@@ -234,7 +241,7 @@ for comb in combs:
 
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
 
-text = text.replace("\\", "\\\\")
+text = text + "time rm -rf " + intermediate_path
 f = open(path_output_s3, "w")
 f.write(text)
 f.close()
