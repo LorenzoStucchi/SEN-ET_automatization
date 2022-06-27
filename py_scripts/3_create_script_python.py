@@ -243,7 +243,8 @@ for comb in combs:
 
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
 
-text = text + "time rm -rf " + intermediate_path
+if p["remove_temp_files_at_end"] == "Y":
+    text = text + "time rm -rf " + intermediate_path + "/*"
 f = open(path_output_s3, "w")
 f.write(text)
 f.close()

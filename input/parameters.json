@@ -2,6 +2,7 @@
     "senet_folder": "/home/eouser/.snap/auxdata/sen-et-conda-Linux64",
     "temp_files" : "/home/eouser/local_data",
     "output_files" : "/home/eouser/lstucchi_data/et_maps",
+    "remove_temp_files_at_end" : "Y",
     "comp_parameters":{
         "ecwf_data":{
             "time_zone": 2
