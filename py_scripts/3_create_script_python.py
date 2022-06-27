@@ -129,7 +129,7 @@ for s2 in s2_list:
     for s3 in s3_list:
         data_s3 = images[s3[0]]["day"]
         delta = datetime.strptime(data_s3, "%Y_%m_%d") - datetime.strptime(data_s2, "%Y_%m_%d")
-        if ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) and delta.days <= 10:
+        if ( ( s3[1].contains(s2[1]) or s3[2].contains(s2[1]) ) or ( s3[1].intersects(s2[1]) or s3[2].intersects(s2[1]) ) ) and delta.days <= 10:
             combs.append([s2[0], s3[0], s2[2]+s3[3]])
         else:
             print(str([s2[0], s3[0]]) + " is not a valid combination")
