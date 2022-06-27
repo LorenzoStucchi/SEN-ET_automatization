@@ -136,6 +136,7 @@ for s2 in s2_list:
 
 
 # check double couples for s3 tile and s2 tile, choose the one with closer date
+print(combs)
 sorted_combs = sorted(combs, key=lambda x:x[2])
 a = len(sorted_combs) - 1
 i = 0
@@ -155,7 +156,7 @@ while i < a:
         i = i + 1
         
 combs = sorted(sorted(sorted_combs, key=lambda x:x[0]), key=lambda x:x[1])
-
+print(combs)
 # for each combination create che corrispoding S3 operation
 for comb in combs:
     s2 = images[comb[0]]
