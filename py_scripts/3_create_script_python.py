@@ -161,11 +161,10 @@ a = len(sorted_combs) - 1
 i = 0
 while i < a:
     if sorted_combs[i][2][:6] == sorted_combs[i+1][2][:6]:
-        s2 = images[sorted_combs[i][0]]
-        s3_1 = images[sorted_combs[i][1]]
-        s3_2 = images[sorted_combs[i+1][1]]
-        delta = abs(datetime.strptime(s3_1["day"], "%Y_%m_%d") - datetime.strptime(s3_2["day"], "%Y_%m_%d"))
-        if delta_1.days == 0:
+        s3_1 = images[sorted_combs[i][1]]["day"]
+        s3_2 = images[sorted_combs[i+1][1]]["day"]
+        delta = abs(datetime.strptime(s3_1, "%Y_%m_%d") - datetime.strptime(s3_2, "%Y_%m_%d"))
+        if delta.days == 0:
             if sorted_combs[i][3] == "C" and sorted_combs[i][3] == "C":
                 print("Two valid S3 images for S2 image :" + str(sorted_combs[i][0]))
                 print("The operation will be executed twice, this will require more time for an not usefull result")
