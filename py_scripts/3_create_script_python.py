@@ -81,6 +81,8 @@ cmd_long = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-
 cmd_short = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/net_shortwave_radiation.py --lsp_product PATHS2_leaf_spectra.dim --lai_product PATHS2_biophysical.dim --csp_product PATHS2_structural_parameters.dim --mi_product PATHERAmeteo.dim --sza_product PATHS3_hr_vza.dim --soil_ref_vis " + soil_ref_vis + " --soil_ref_nir " + soil_ref_nir + " --output_file PATHOUT_shortwave_ra.dim"
 cmd_fluxes = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/energy_fluxes.py --lst PATHS3_lst_sharpened.dim --lst_vza PATHS3_hr_vza.dim --lai PATHS2_biophysical.dim --csp PATHS2_structural_parameters.dim --fgv PATHS2_frac_green.dim --ar PATHS2_aerodynamic_parameters.dim --mi PATHERAmeteo.dim --nsr PATHOUT_shortwave_ra.dim --li PATHOUT_longwave_ir.dim --mask PATHS2_mask.dim --soil_roughness " + soil_roughness_en + " --alpha_pt " + alpha_pt + " --atmospheric_measurement_height 100 --green_vegetation_emissivity " + green_vegetation_emissivity + " --soil_emissivity " + soil_emissivity + " --save_component_fluxes 1 --save_component_temperature 1 --save_aerodynamic_parameters 1 --output_file PATHOUT_instantaneous_fluxes.dim"
 cmd_et = "time " + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/daily_evapotranspiration.py --ief_file PATHOUT_instantaneous_fluxes.dim --mi_file PATHERAmeteo.dim --output_file PATHET_daily_evapotranspiration.dim"
+output_remove = "rm -rfv PATHS3_hr_vza.dim PATHS3_lst_sharpened.dim PATHERAmeteo.dim PATHOUT_longwave_ir.dim PATHOUT_shortwave_ra PATHOUT_instantaneous_fluxes.dim PATHET_daily_evapotranspiration.dim PATHS3_hr_vza.data PATHS3_lst_sharpened.data PATHERAmeteo.data PATHOUT_longwave_ir.data PATHOUT_shortwave_ra PATHOUT_instantaneous_fluxes.data PATHET_daily_evapotranspiration.data"
+
 i = 1
 for image in images:
     if image["platform"] == "S2":
@@ -231,7 +233,9 @@ for comb in combs:
     f.write(text_grapht_et)
     f.close()
 
-    text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
+    text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n"
+    if p["remove_temp_files_at_end"] == "Y":
+        text = text + output_remove.replace("PATHERA", t_general_path_era).replace("PATHOUT", t_general_path_out).replace("PATHET", t_general_path_et).replace("PATHS3", t_general_path_s3) + "\n\n\n"
     i = i + 8
 
 text = text.replace("TOTALITERATION", str(i-1))
