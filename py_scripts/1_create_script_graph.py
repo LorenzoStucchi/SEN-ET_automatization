@@ -53,6 +53,9 @@ for image in images:
 
 AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
 
+i = 1
+j = 1
+
 for image in images:
     # Creation of script and xml file for S3
     if image["platform"] == "S3":
@@ -61,7 +64,7 @@ for image in images:
         path = image["derived_product_path"]
 
         # Processing
-        script_text_s3 = script_text_s3 + "echo \"\t Processing the image S3 " + date + "_" + id_s3 + "\"\n"
+        script_text_s3 = script_text_s3 + "echo \"\tPRE-S3 " + str(i) + "/TOTALITERATION Processing the image S3 " + date + "_" + id_s3 + "\"\n"
         obs_image = path + "/S3_obs_geometry.dim"
         mask_image = path + "/S3_mask.dim"
         lst_image = path + "/S3_lst.dim"
@@ -72,6 +75,8 @@ for image in images:
         f.write(text_s3_pro)
         f.close()
 
+        i = i + 1
+
     # Creation of script and xml file for S2
     elif image["platform"] == "S2":
         tile = image["tile"]
@@ -80,7 +85,7 @@ for image in images:
         sensor_s2 = " ".join(image["path"].split("/")[-2:])[:3]
         
         # Processing
-        script_text_s2 = script_text_s2 + "echo \"\t Processing the image S2 " + date + "_" + tile + "\"\n"
+        script_text_s2 = script_text_s2 + "echo \"\tPRE-S2 " + str(j) + "/TOTALITERATION Processing the image S2 " + date + "_" + tile + "\"\n"
         mask_image = path + "/S2_mask.dim"
         bio_image = path + "/S2_biophysical.dim"
         refl_image = path + "/S2_reflectance.dim"
@@ -94,7 +99,7 @@ for image in images:
         f.close()
         
         # Landcover
-        script_text_s2 = script_text_s2 + "echo \"\t Computing the landcover for the image S2 " + date + "\"\n"
+        script_text_s2 = script_text_s2 + "echo \"\tPRE-S2 " + str(j+1) + "/TOTALITERATION Computing the landcover for the image S2 " + date + "\"\n"
         LC_image = path + "/S2_landcover.dim"
         text_LC = graph_LC.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_CCI_landcover!", LC_image)
         path_LC = path + "/graph/" + "add_landcover_"  + date + "_" + tile +".xml"
@@ -105,7 +110,7 @@ for image in images:
         f.close()
 
         # Elevation
-        script_text_s2 = script_text_s2 + "echo \"\t Computing the elevation for the image S2 " + date + "_" + tile + "\"\n"
+        script_text_s2 = script_text_s2 + "echo \"\tPRE-S2 " + str(j+2) + "/TOTALITERATION Computing the elevation for the image S2 " + date + "_" + tile + "\"\n"
         ele_image = path + "/S2_elevation.dim"
         text_ele = graph_ele.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_SRTM_elevation!", ele_image)
         path_ele = path + "/graph/" + "add_elevation_"  + date + "_" + tile +".xml"
@@ -114,6 +119,11 @@ for image in images:
         f = open(path_ele, "w")
         f.write(text_ele)
         f.close()
+
+        j = j + 1
+
+script_text_s2 = script_text_s2.replace("TOTALITERATION", str(j-1))
+script_text_s3 = script_text_s3.replace("TOTALITERATION", str(i-1))
 
 f = open(path_script_s3, "w")
 f.write(script_text_s3)
