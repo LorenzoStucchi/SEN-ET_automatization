@@ -97,7 +97,7 @@ for image in images:
         text = text + cmd_aero.replace("PATHS2", t_general_path_s2) + "\n"
         i = i + 4
 
-text = text.replace("TOTALITERATION", str(i-4))
+text = text.replace("TOTALITERATION", str(i-1))
 
 f = open(path_output_s2, "w")
 f.write(text)
@@ -234,7 +234,7 @@ for comb in combs:
     text = text + "echo \"\t Finish the computation of the evapotranspiration for the image S3 " + date + "\"\n\n"
     i = i + 8
 
-text = text.replace("TOTALITERATION", str(i-8))
+text = text.replace("TOTALITERATION", str(i-1))
 if p["remove_temp_files_at_end"] == "Y":
     text = text + "time rm -rf " + intermediate_path + "/*"
 f = open(path_output_s3, "w")
