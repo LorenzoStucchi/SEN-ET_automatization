@@ -120,7 +120,7 @@ for image in images:
         f.write(text_ele)
         f.close()
 
-        j = j + 1
+        j = j + 3
 
 script_text_s2 = script_text_s2.replace("TOTALITERATION", str(j-1))
 script_text_s3 = script_text_s3.replace("TOTALITERATION", str(i-1))
