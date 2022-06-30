@@ -3,6 +3,7 @@
     "temp_files" : "/home/eouser/local_data",
     "output_files" : "/home/eouser/lstucchi_data/et_maps",
     "remove_temp_files_at_end" : "Y",
+    "time_test": "Y",
     "comp_parameters":{
         "flag_gpt_opt_s2": "-x -q 512",
         "ecwf_data":{

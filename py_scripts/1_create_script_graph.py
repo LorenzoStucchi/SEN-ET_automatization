@@ -16,6 +16,12 @@ with open(path_param, "r") as f:
     param = json.load(f)
 intermediate_output_path = param["temp_files"]
 gpt_set = param["comp_parameters"]["flag_gpt_opt_s2"]
+f_time = param["time_test"]
+
+if f_time == "Y":
+    time_cmd = "time "
+else:
+    time_cmd = ""
 
 with open(path_file_path, "r") as f:
     images = json.load(f)["data"]
@@ -72,7 +78,7 @@ for image in images:
         lst_image = path + "/S3_lst.dim"
         text_s3_pro = graph_s3_pro.replace("!INPUT_Sentinel-3_LST!", image["path"]).replace("!INPUT_AOI_WKT!", AOI_WTK).replace("!OUTPUT_observation_geometry!", obs_image).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_LST!", lst_image)
         path_s3_pro = path + "/graph/" + "sentinel_3_preprocessing_"  + date + "_" + id_s3 +".xml"
-        script_text_s3 = script_text_s3 + "time gpt " + path_s3_pro + "\n" + "\n\n"
+        script_text_s3 = script_text_s3 + time_cmd + "gpt " + path_s3_pro + "\n" + "\n\n"
         f = open(path_s3_pro, "w")
         f.write(text_s3_pro)
         f.close()
@@ -95,7 +101,7 @@ for image in images:
         zen_image = path + "/S2_sun_zenith_angle.dim"
         text_s2_pro = graph_s2_pro.replace("!INPUT_Sentinel-2_L2A!", image["path"]).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_biophysical!", bio_image).replace("!INPUT_Sensor_S2!", sensor_s2).replace("!OUTPUT_reflectance!", refl_image).replace("!OUTPUT_resampled!", resample_image).replace("!OUTPUT_sun_zenith_angle!", zen_image)
         path_s2_pro = path + "/graph/" + "sentinel_2_pre_processing_"  + date + "_" + tile +".xml"
-        script_text_s2 = script_text_s2 + "time gpt " + gpt_set + " " + path_s2_pro + "\n"
+        script_text_s2 = script_text_s2 + time_cmd + "gpt " + gpt_set + " " + path_s2_pro + "\n"
         f = open(path_s2_pro, "w")
         f.write(text_s2_pro)
         f.close()
@@ -105,7 +111,7 @@ for image in images:
         LC_image = path + "/S2_landcover.dim"
         text_LC = graph_LC.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_CCI_landcover!", LC_image)
         path_LC = path + "/graph/" + "add_landcover_"  + date + "_" + tile +".xml"
-        script_text_s2 = script_text_s2 + "time gpt " + path_LC + "\n"
+        script_text_s2 = script_text_s2 + time_cmd + "gpt " + path_LC + "\n"
         script_text_s2 = script_text_s2 + "echo \"Computed the landcover for the image S2 " + date + "_" + tile + "\"\n"
         f = open(path_LC, "w")
         f.write(text_LC)
@@ -116,7 +122,7 @@ for image in images:
         ele_image = path + "/S2_elevation.dim"
         text_ele = graph_ele.replace("!INPUT_Sentinel-2_Mask!", mask_image).replace("!OUTPUT_SRTM_elevation!", ele_image)
         path_ele = path + "/graph/" + "add_elevation_"  + date + "_" + tile +".xml"
-        script_text_s2 = script_text_s2 + "time gpt " + path_ele + "\n" 
+        script_text_s2 = script_text_s2 + time_cmd + "gpt " + path_ele + "\n" 
         script_text_s2 = script_text_s2 + "echo \"Computed the elevation for the image S2 " + date + "\"\n" + "\n\n"
         f = open(path_ele, "w")
         f.write(text_ele)
