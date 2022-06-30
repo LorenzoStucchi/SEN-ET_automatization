@@ -15,6 +15,8 @@ path_script_s2 = "output/2_script_gpt_s2.sh"
 with open(path_param, "r") as f:
     param = json.load(f)
 intermediate_output_path = param["temp_files"]
+gpt_set = param["comp_parameters"]["flag_gpt_opt_s2"]
+
 with open(path_file_path, "r") as f:
     images = json.load(f)["data"]
 
@@ -93,7 +95,7 @@ for image in images:
         zen_image = path + "/S2_sun_zenith_angle.dim"
         text_s2_pro = graph_s2_pro.replace("!INPUT_Sentinel-2_L2A!", image["path"]).replace("!OUTPUT_mask!", mask_image).replace("!OUTPUT_biophysical!", bio_image).replace("!INPUT_Sensor_S2!", sensor_s2).replace("!OUTPUT_reflectance!", refl_image).replace("!OUTPUT_resampled!", resample_image).replace("!OUTPUT_sun_zenith_angle!", zen_image)
         path_s2_pro = path + "/graph/" + "sentinel_2_pre_processing_"  + date + "_" + tile +".xml"
-        script_text_s2 = script_text_s2 + "time gpt " + path_s2_pro + "\n"
+        script_text_s2 = script_text_s2 + "time gpt " + gpt_set + " " + path_s2_pro + "\n"
         f = open(path_s2_pro, "w")
         f.write(text_s2_pro)
         f.close()

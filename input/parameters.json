@@ -4,6 +4,7 @@
     "output_files" : "/home/eouser/lstucchi_data/et_maps",
     "remove_temp_files_at_end" : "Y",
     "comp_parameters":{
+        "flag_gpt_opt_s2": "-x -q 512",
         "ecwf_data":{
             "time_zone": 2
         },
@@ -19,7 +20,7 @@
         "data_mining":{
             "cv_homogeneity_threshold": 0.0,
             "moving_window_size": 30,
-            "parallel_jobs": 2
+            "parallel_jobs": 4
         },
         "shortwave_radiation":{
             "soil_ref_vis": 0.15,
