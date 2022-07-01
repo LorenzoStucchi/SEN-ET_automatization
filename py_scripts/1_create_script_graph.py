@@ -3,7 +3,6 @@ import os
 from os.path import exists
 import math
 from datetime import datetime
-from re import S
 
 path_param = "input/parameters.json"
 path_file_path = "output/path.json"
@@ -55,19 +54,21 @@ for image in images:
     if os.path.isdir(path_derived) == False:
         os.makedirs(path_derived)
     if image["platform"] == "S2":
+        date = datetime.strptime(image["day"], "%Y_%m_%d")
+        start_date = min(start_date, date)
+        end_date = max(end_date, date)
         try:
             n = max(n, math.ceil(float(image["bbox"]["n"])))
             s = min(s, math.floor(float(image["bbox"]["s"])))
             e = max(e, math.ceil(float(image["bbox"]["e"])))
             w = min(w, math.floor(float(image["bbox"]["w"])))
-            date = datetime.strptime(image["day"], "%Y_%m_%d")
-            start_date = min(start_date, date)
-            end_date = max(end_date, date)
         except NameError:
             n = math.ceil(float(image["bbox"]["n"]))
             s = math.floor(float(image["bbox"]["s"]))
             e = math.ceil(float(image["bbox"]["e"]))
             w = math.floor(float(image["bbox"]["w"]))
+            
+
 
 AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
 bbox = str(n) + "/" + str(w)  + "/" + str(s)  + "/" + str(e) 
