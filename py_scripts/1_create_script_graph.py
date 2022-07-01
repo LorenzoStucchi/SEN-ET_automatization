@@ -1,6 +1,9 @@
 import json
 import os
+from os.path import exists
 import math
+from datetime import datetime
+from re import S
 
 path_param = "input/parameters.json"
 path_file_path = "output/path.json"
@@ -8,6 +11,7 @@ path_graph_s2_pro = "graph/sentinel_2_pre_processing.xml"
 path_graph_LC = "graph/add_landcover.xml"
 path_graph_ele = "graph/add_elevation.xml"
 path_graph_s3_pro = "graph/sentinel_3_pre_processing.xml"
+path_script_era = "output/0_script_download_era.sh"
 path_script_s3 = "output/1_script_gpt_s3.sh"
 path_script_s2 = "output/2_script_gpt_s2.sh"
 
@@ -17,6 +21,7 @@ with open(path_param, "r") as f:
 intermediate_output_path = param["temp_files"]
 gpt_set = param["comp_parameters"]["flag_gpt_opt_s2"]
 f_time = param["time_test"]
+python_path = param["senet_folder"]
 
 if f_time == "Y":
     time_cmd = "time "
@@ -42,6 +47,8 @@ f.close()
 
 script_text_s3 = ""
 script_text_s2 = ""
+start_date = datetime(9999,12,31)
+end_date = datetime(1970,1,1)
 
 for image in images:
     path_derived = image["derived_product_path"]  + "/graph"
@@ -53,6 +60,9 @@ for image in images:
             s = min(s, math.floor(float(image["bbox"]["s"])))
             e = max(e, math.ceil(float(image["bbox"]["e"])))
             w = min(w, math.floor(float(image["bbox"]["w"])))
+            date = datetime.strptime(image["day"], "%Y_%m_%d")
+            start_date = min(start_date, date)
+            end_date = max(end_date, date)
         except NameError:
             n = math.ceil(float(image["bbox"]["n"]))
             s = math.floor(float(image["bbox"]["s"]))
@@ -60,6 +70,16 @@ for image in images:
             w = math.floor(float(image["bbox"]["w"]))
 
 AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
+bbox = str(n) + "/" + str(w)  + "/" + str(s)  + "/" + str(e) 
+start_date = str(start_date)[:10]
+end_date = str(end_date)[:10]
+
+cmd_ecmwf_download = time_cmd + python_path + "/bin/python " + python_path + "/sen-et-snap-scripts/ecmwf_data_download.py --area " + bbox + " --start_date " + start_date + " --end_date " + end_date + " --download_path input/era/era5.nc --download_temperature 1 --download_dewpoint 1 --download_pressure 1 --download_wind_speed 1 --download_clear_sky_solar_radiation 1 --download_solar_radiation 1 --overwrite 1"
+
+if exists("input/era/era5.nc"):
+    script_text_era = "echo \"\t Already existing file input/era/era5.nc step skipped, rename the file or deleted and rerun this step to download the data \"\n"
+else:
+    script_text_era = "echo \"\t ECMWF ERA5 data download \" \n" + cmd_ecmwf_download
 
 i = 1
 j = 1
@@ -133,6 +153,9 @@ for image in images:
 script_text_s2 = script_text_s2.replace("TOTALITERATION", str(j-1))
 script_text_s3 = script_text_s3.replace("TOTALITERATION", str(i-1))
 
+f = open(path_script_era, "w")
+f.write(script_text_era)
+f.close()
 f = open(path_script_s3, "w")
 f.write(script_text_s3)
 f.close()
@@ -140,4 +163,4 @@ f = open(path_script_s2, "w")
 f.write(script_text_s2)
 f.close()
 
-print("\tScripts created!\n\t" + path_script_s3 + "\n\t" + path_script_s2)
+print("\tScripts created!\n\t" + path_script_era + "\n\t" + path_script_s3 + "\n\t" + path_script_s2)
