@@ -4,6 +4,8 @@ time python3 py_scripts/0_path_read.py
 echo "==================="
 time python3 py_scripts/1_create_script_graph.py
 echo "==================="
+time sh output/0_script_download_era.sh
+echo "==================="
 time sh output/1_script_gpt_s3.sh
 echo "==================="
 time python3 py_scripts/2_read_times_s3.py
