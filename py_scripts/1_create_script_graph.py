@@ -53,10 +53,10 @@ for image in images:
     path_derived = image["derived_product_path"]  + "/graph"
     if os.path.isdir(path_derived) == False:
         os.makedirs(path_derived)
+    date = datetime.strptime(image["day"], "%Y_%m_%d")
+    start_date = min(start_date, date)
+    end_date = max(end_date, date)
     if image["platform"] == "S2":
-        date = datetime.strptime(image["day"], "%Y_%m_%d")
-        start_date = min(start_date, date)
-        end_date = max(end_date, date)
         try:
             n = max(n, math.ceil(float(image["bbox"]["n"])))
             s = min(s, math.floor(float(image["bbox"]["s"])))
