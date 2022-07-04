@@ -173,11 +173,11 @@ while i < a:
         delta = abs(datetime.strptime(s3_1, "%Y_%m_%d") - datetime.strptime(s3_2, "%Y_%m_%d"))
         if delta.days == 0:
             if sorted_combs[i][3] == "C" and sorted_combs[i+1][3] == "C":
-                print("Two valid S3 images contains S2 image: " + str(sorted_combs[i][0]) + " for day " + s3_1)
+                print("Two valid S3 images contains S2 image: " + str(images[sorted_combs[i][0]]["path"]) + " for day " + s3_1)
                 print("The operation will be executed twice, this will require more time for an not usefull result")
                 i = i + 1
             elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "I": 
-                print("Two valid S3 images intersect S2 image: " + str(sorted_combs[i][0]) + " for day " + s3_1)
+                print("Two valid S3 images intersect S2 image: " + str(images[sorted_combs[i][0]]["path"]) + " for day " + s3_1)
                 print("The operation will be executed twice, this will require more time for an not usefull result")
                 i = i + 1
             elif sorted_combs[i][3] == "I" and sorted_combs[i+1][3] == "C":
