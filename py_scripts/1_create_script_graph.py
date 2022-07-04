@@ -2,7 +2,7 @@ import json
 import os
 from os.path import exists
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 
 path_param = "input/parameters.json"
 path_file_path = "output/path.json"
@@ -72,6 +72,8 @@ for image in images:
 
 AOI_WTK = "POLYGON ((" + str(w) + " " + str(n) + ", " + str(e) + " " + str(n) + ", " + str(e) + " " + str(s) + ", " + str(w) + " " + str(s) + ", " + str(w) + " " + str(n) + ", " + str(w) + " " + str(n) + "))"
 bbox = str(n) + "/" + str(w)  + "/" + str(s)  + "/" + str(e) 
+start_date = start_date + timedelta(days=-1)
+end_date = end_date + timedelta(days=1)
 start_date = str(start_date)[:10]
 end_date = str(end_date)[:10]
 
