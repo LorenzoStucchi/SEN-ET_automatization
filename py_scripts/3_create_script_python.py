@@ -208,7 +208,7 @@ for comb in combs:
     t_general_path_era = general_path_era.replace("YYYY", year).replace("MM", mon).replace("DD", day).replace("TILE", s2["tile"])
     t_general_path_out = s3["derived_product_path"] + "/S3"
     t_general_path_et = s3["derived_product_path"] + "/S3"
-    t_general_path_et_tiff = et_path + "/" + s3["day"] + "_" + s2["tile"] + "_" + s3["tile"]
+    t_general_path_et_tiff = et_path + "/" + year + "/" + mon + "/" + day +"/" + s3["day"] + "_" + s2["tile"] + "_" + s3["tile"]
 
     text = text + "echo \"\t S3 " + str(i) + "/TOTALITERATION Warp the image S3 " + date + "\"\n"
     text = text + cmd_warp.replace("PATHS3", t_general_path_s3).replace("PATHS2", t_general_path_s2) + "\n"
