@@ -1,4 +1,4 @@
-# Automatization of the SEN-et SNAP plugin for multi-temporal analysis
+# DIAS Automatization of the SEN-et SNAP plugin for multi-temporal analysis
 ## Description
 
 The [SEN-ET project](https://www.esa-sen4et.org/) has been founded for ESA with the main object to *"develop an optimal methodology for estimating evapotranspiration at fine (tens of meters) spatial scale, based on synergistic use of Sentinel 2 and Sentinel 3 satellites’ observations"* as reported by the website of the project.
@@ -16,7 +16,7 @@ The dias automation process reduces it to one step and presents this schema:
 
 The whole procedure have been tested on a [CREODIAS](https://creodias.eu/) machine with Ubuntu 18.04.6 LTS. The operation are done using the software [MobaXterm Personal](https://mobaxterm.mobatek.net/download.html) for connecting to the dias.
 
-## Installation
+## Installation for DIAS
 ### Instal SNAP
 To install SNAP it is needed to have installed on the machine OpenJDK, it is possible to install it with
 
