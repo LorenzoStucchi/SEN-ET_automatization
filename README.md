@@ -4,114 +4,175 @@
 The [SEN-ET project](https://www.esa-sen4et.org/) has been founded for ESA with the main object to *"develop an optimal methodology for estimating evapotranspiration at fine (tens of meters) spatial scale, based on synergistic use of Sentinel 2 and Sentinel 3 satellites’ observations"* as reported by the website of the project.
 
 The plugin is mainly thought for use inside SNAP, so a manual operation where the user has to make the different operations manually. However, also the python scripts for the operation have been released.
-The scope of this repository is to create the possibility to automatize the process, allowing the computation of multiple days without the manual input of the operator. So, it is possible to compute monthly means on an area of interest.
+The scope of this brach of the repository is to have a fully automatize the process, allowing the computation of multiple days without the manual input of the operator, inside a DIAS platform. So, it is possible to compute monthly means on an area of interest.
 
 The original schema for the plugin is represented in the image below:
 
 ![OLD SEN-ET plugin](assets/old.png)
 
-The automation process reduces it to one step and presents this schema:
+The dias automation process reduces it to one step and presents this schema:
 
-![New short sen-et](assets/new_full.png)
+![New short dias sen-et](assets/new_dias.png)
+
+The whole procedure have been tested on a [CREODIAS](https://creodias.eu/) machine with Ubuntu 18.04.6 LTS. The operation are done using the software [MobaXterm Personal](https://mobaxterm.mobatek.net/download.html) for connecting to the dias.
 
 ## Installation
-It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip) as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. In case of troubleshooting, see Section 3.4.
+### Instal SNAP
+To install SNAP it is needed to have installed on the machine OpenJDK, it is possible to install it with
 
-The suggested version of python to be used for Windows is the 3.6.8, it should be downloaded before the installation of SNAP. The installer could be downloaded [here](https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe).
+```sh
+sudo apt-get install openjdk-11-jre
+```
 
+Then it is possible to download the installation script for snap and install it with
+```sh
+cd /tmp
+wget  https://download.esa.int/step/snap/8.0/installers/esa-snap_all_unix_8_0.sh
+sudo chmod +x esa-snap_all_unix_8_0.sh
+./esa-snap_all_unix_8_0.sh
+rm /tmp/esa-snap_all_unix_8_0.sh
+cd
+```
+
+It is needed to visually launch the snap interface for some passages, it could be done adding some lines in the bash aliases. To modify the file run:
+```sh
+nano ~/.bash_aliases
+```
+Then in the file add the two following lines:
+```
+export PATH=/home/eouser/snap/bin:$PATH
+alias snap='/home/eouser/snap/bin/snap'
+```
+Close and save the file, with `ctrl` + `S` and `ctrl` + `X`.
+To then open the graphical interface of snap using the MobaXterm Personal it is sufficient to write in the terminal:
+```sh
+snap &
+```
+
+### Set python in snap with snappy
+
+Snappy requires python version 3.6, for Ubuntu 18.04 LTS it is already present and could be used with the command:
+```sh
+cd
+cd snap/bin
+snappy-conf /usr/bin/python3.6
+```
+
+#### Extra: install python 3.6
+
+If python version 3.6 is not installed on your machine you could install it using the command:
+```sh
+sudo apt install python3.6
+```
+And then do the steps above
+
+### Increase the max RAM usable
+
+The default values of RAM usage from snap could be increased up to the 80-90% to increase the performance. For example for a machine with 32 GB of RAM, 30 could be an accepted value. So this is used as example:
+
+#### for snappy
+```sh
+sudo nano /home/eouser/.snap/snap-python/snappy/snappy.ini
+```
+Then modify the file with:
+```
+java_max_mem: 30G
+```
+#### for gpt
+```sh
+sudo nano /home/eouser/snap/bin/gpt.vmoptions
+```
+Then modify the file with:
+```
+-Xmx30G
+```
+
+### Configuration of the CDS api
+Log in to the [page](https://cds.climate.copernicus.eu/api-how-to) and copy the value shows in the section [1](https://cds.climate.copernicus.eu/api-how-to#install-the-cds-api-key). Create the file with the comand
+
+```sh
+cd
+nano .cdsapirc
+```
+Then in the file paste the previously copied text that should be in a format like this
+```
+url: https://cds.climate.copernicus.eu/api/v2
+key: {uid}:{api-key}
+```
+
+The time needed for processing the request of the data could vary, but it is possible to check the [status](https://cds.climate.copernicus.eu/cdsapp#!/yourrequests) of the request on the CDS.
+
+### Install the sen-et plugin
+The sen-et plugin could be downloaded with the following command:
+```sh
+cd /tmp
+wget https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip
+unzip Sen-ET-plugin-v1.0.1.b41ae6c8.zip
+```
+Then open snap with `snap &` and install the plugin using the graphical interface as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. 
+
+### First lunch of the sen-et plugin
 At the first start, it is needed to run an operator to complete the bundle installation as indicated in the documentation:
 
 *The first time any of the Sen-ET operators is run the user will receive a SNAP - Warning message about path not existing. After clicking OK another dialog will appear asking user if they want to proceed with bundle download/installation (Figure 3.4). After clicking "Yes" the download and installation of the plugin bundle (the self-contained Python environment) will happen automatically. When the bundle installation finishes, a message will notify of the successful installation of the bundle. The Sen-ET SNAP plugin is installed and ready for use.*
 
 The installation and the test that everything is working will be done in the step of the download of the ERA5 Data. This will be later explained.
 
-For Windows computers, it is also needed to install the Git Bash terminal provided with the installation of [Git](https://git-scm.com/downloads).
+### Download and install the automatization
 
 Download the code in the terminal with
-```
+```sh
+cd
 git clone https://github.com/LorenzoStucchi/SEN-ET_automatization.git
 ```
+The code requires one library that is not already installed that is `shapely`. To install it use
+```sh
+sudo apt install python3-setuptools
+sudo apt install python3-pip
+sudo apt install libgeos-dev
+pip3 install shapely
+```
 
-## Data download
-### ECMWF Reanalysis v5 (ERA5) Data
-The download of the ERA5 data could be done in multiple ways. The suggested one is with the use of the SEN-ET plugin inside SNAP. This will test that the plugin is correctly working.
+### PLUS: use screen command
 
-For the download, it is needed to have an account for the [Climate Data Store (CDS)](https://cds.climate.copernicus.eu/#!/home) of the Copernicus Climate Change Service. The account could be created for free [here](https://cds.climate.copernicus.eu/user/register).
+The command `screen` could be very usefull to run the code in a continuous window without the risk of stop the execution due to the disconection from the server.
+It could be installed with 
+```sh
+sudo apt install screen
+```
+Then before run the code use the comand below to create a new session: 
+```sh
+screen
+```
+A guide to use the comand is available [online](https://linuxize.com/post/how-to-use-linux-screen/).
 
-Then, it is needed to log in to the [page](https://cds.climate.copernicus.eu/api-how-to) and follow the instruction for the API configuration of the CDS. It is needed only to create the file `.cdsapirc` and **NOT** to install the API client using `pip`.
-
-Now, open SNAP and open the function `Download ECMWF ERA5 reanalysis data` at `Optical > Thematical Land Processing > SEN-ET`. Insert the parameters Area of Interest and the first and last date of the analysis period, in the `Processing Parameters` tab, following the instruction and keep all the flags on the element to be downloaded. Finally, insert the path for the download of the file with the data and name it as `era5.nc` and click `Run`.
-The processing and the request of the data for one month request around one hour, but it is possible to check the [status](https://cds.climate.copernicus.eu/cdsapp#!/yourrequests) of the request on the CDS.
+## Prepere the data
 
 ### Sentinel Images
-For the download of the Sentinel Images, it is suggested to use the [Copernicus Open Access Hub](https://scihub.copernicus.eu/dhus/#/home) because most of the images are offline, so not available immediately but only after some hours. 
-Create an account [here](https://scihub.copernicus.eu/dhus/#/self-registration), and then it is possible to search the images and start the product retrieval, adding them into the cart.
 
 The images request needs to be of the product type:
-- Sentinel 2: `S2MSI2A`
-- Sentinel 3: `SL_2_LST____`
+- Sentinel-2: `S2MSI2A`
+- Sentinel-3: `SL_2_LST____`
 
-That option could be added in the filters, zoom to the area of interest and drawn a rectangular in the area. Open the filter panel and add in the sensing date, the timespan of interest for your analysis, and the desired timespan. Using the preview, it is also possible to check the cloud coverage visually.
+The list of images should be inserted in the file [`images.txt`](input/images.txt), listing before all the Sentinel-2 images and then the Sentinel-3. It is also suggested to ordered them by date.
 
-### Folder structure
-Once the data are downloaded, it is needed to organize them in a specific way. An analysis of the data for one month will produce products for around 500 GB. The main folder that could be named as preferred, in the schema below `MAIN_FOLDER`. One folder for each type of data is called `era`, `S2` and `S3`. Inside the `S2` and `S3` folders, a folder for each of the days of the images, the folder should be named in this format `YYYY_MM_DD`.
+To obtain the list of images it is useful to use the [CREODIAS finder](https://finder.creodias.eu/), then copy in the file just the name of the images, like in the demo file.
 
-Once the structure has been created, the `era5.nc` and the images should be moved to the correct folder. Also, it is needed to unzip the images.
-As example:
-```
-MAIN_FOLDER
-├───era
-│   └  era5.nc
-│
-├───S2
-│   └───2019_08_06
-│       ├   S2A_MSIL2A_20190806T095031_N0213_R079_T33TWF_20190806T114240.zip
-│       │
-│       └───S2A_MSIL2A_20190806T095031_N0213_R079_T33TWF_20190806T114240.SAFE
-│           │   INSPIRE.xml
-│           │   manifest.safe
-│           │   MTD_MSIL2A.xml
-│           │
-│           ├───AUX_DATA
-│           ├───DATASTRIP
-│           ├───GRANULE
-│           └───rep_info
-│
-└───S3
-    └───2019_08_03
-        ├   S3A_SL_2_LST____20190803T083233_20190803T101332_20190804T153249_6059_047_335______LN2_O_NT_003.zip
-        │
-        └───S3A_SL_2_LST____20190803T083233_20190803T101332_20190804T153249_6059_047_335______LN2_O_NT_003.SEN3
-                cartesian_in.nc
-                cartesian_tx.nc
-                flags_in.nc
-                geodetic_in.nc
-                geodetic_tx.nc
-                geometry_tn.nc
-                indices_in.nc
-                LST_ancillary_ds.nc
-                LST_in.nc
-                met_tx.nc
-                time_in.nc
-                xfdumanifest.xml
-```
-## Set the parameters
+### Parameters
 Set the parameters in the file [`parameters.json`](input/parameters.json):
-- Set the coordinates of the Area Of Interest (AOI), which could be the portion of the Sentinel 2 images or a bigger area; it is used to cut the Sentinel 3 images and improve the speed of the computation.
-- The absolute path indicated by `MAIN_FOLDER` in the previous schema should be inserted in the `general_path` variable. In the example, the `MAIN_FOLDER` absolute path is `"D:\\TEMP\\"`.
-- The path into the `senet_folder` variable. The `senet_folder` is something like `"C:\\Users\\user\\.snap\\auxdata\\sen-et-conda-Win64"`.
-- It is also possible to modify all the default computational parameters, as explained in Section 3.3 of the official guide. The *only* parameter that should be modified is the [timezone of the area](input/parameters.json#L12).
-
-Finally, copy the absolute path of all the Sentinel Images in the files [`s2_paths.txt`](input/s2_paths.txt) and [`s3_paths.txt`](input/s3_paths.txt). The path should point to the folders `.SAFE` for S2 and `.SEN3` for S3.
+- The path into the `senet_folder` variable. The `senet_folder` is something like `"/home/eouser/.snap/auxdata/sen-et-conda-Linux64"`.
+- The temporary path where you want to save intermediate products, that then will be removed, it is suggest to be on a SSD disk, should be indicated in the `temp_files` variable. For example the path is `"/home/eouser/local_data"`.
+- The output folder should be indicated in the variable `output_files`, this could be on a object-based storage with unlimited space, it will be access only for writing once and it is not needed to be a fast memory. For the example `"/home/eouser/lstucchi_data/et_maps"`.
+- With the flag `remove_temp_files_at_end` it is possible to choose to save space on the machine and remove the intermediate output.
+- The flag `time_test` add the option to test the time needed for each step, it could be usefull to test the different steps before lanching a long computation.
+- It is also possible to modify all the default computational parameters, as explained in Section 3.3 of the official guide. The *only* parameter that should be modified is the [timezone of the area](input/parameters.json#L10).
 
 ## Run the code
-In a terminal run (for Windows use the Git bash terminal): 
-```
+In a terminal run: 
+```sh
+cd SEN-ET_automatization
 sh main.sh
 ```
-
-## Correction of errors
-In the [official code repository](https://github.com/DHI-GRAS/sen-et-snap-scripts), the graphs present some errors due to some changes in the new versions of SNAP. To fix the errors, the new version of the graph is present in the folder [graph](graph/).
 
 ## Authors
 The official code of SNAP is released with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
