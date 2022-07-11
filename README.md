@@ -21,7 +21,7 @@ The whole procedure have been tested on a [CREODIAS](https://creodias.eu/) machi
 To install SNAP it is needed to have installed on the machine OpenJDK, it is possible to install it with
 
 ```sh
-sudo apt-get install openjdk-11-jre
+sudo apt install openjdk-11-jre
 ```
 
 Then it is possible to download the installation script for snap and install it with
@@ -38,6 +38,7 @@ It is needed to visually launch the snap interface for some passages, it could b
 ```sh
 nano ~/.bash_aliases
 ```
+
 Then in the file add the two following lines:
 ```
 export PATH=/home/eouser/snap/bin:$PATH
@@ -60,11 +61,14 @@ snappy-conf /usr/bin/python3.6
 
 #### Extra: install python 3.6
 
-If python version 3.6 is not installed on your machine you could install it using the command:
+If python version 3.6 is not installed on your machine you could install it following that [guide](https://github.com/novasush/build-python-from-source). To find the location of python then use the command:
 ```sh
-sudo apt install python3.6
+which python 3.6
 ```
-And then do the steps above
+and then set the obtained path as location for snappy with:
+```sh
+snappy-conf <PATH_PYTHON3.6>
+```
 
 ### Increase the max RAM usable
 
@@ -133,19 +137,6 @@ sudo apt install libgeos-dev
 pip3 install shapely
 ```
 
-### PLUS: use screen command
-
-The command `screen` could be very usefull to run the code in a continuous window without the risk of stop the execution due to the disconection from the server.
-It could be installed with 
-```sh
-sudo apt install screen
-```
-Then before run the code use the comand below to create a new session: 
-```sh
-screen
-```
-A guide to use the comand is available [online](https://linuxize.com/post/how-to-use-linux-screen/).
-
 ## Prepere the data
 
 ### Sentinel Images
@@ -173,6 +164,40 @@ In a terminal run:
 cd SEN-ET_automatization
 sh main.sh
 ```
+## TIPS & TRICKS
+
+### `screen` command
+
+The command `screen` could be very usefull to run the code in a continuous window without the risk of stop the execution due to the disconection from the server.
+It could be installed with 
+```sh
+sudo apt install screen
+```
+Then before run the code use the comand below to create a new session: 
+```sh
+screen
+```
+A guide to use the comand is available [online](https://linuxize.com/post/how-to-use-linux-screen/).
+
+### Disk size
+
+Running a long process the disk could easly saturate. Intermediate products require quite a big space, a reference in the table.The preproducts of Sentinel-2 and Sentinel-3 are share between different final output so could not be removed until the end of the whole process. So it is suggest also to estimate the needed amount of space needed on the disk. Instead the combinations product are delete after each computation and only the size of the final ET remains.
+
+| Products step              | Disk space occupied |
+|----------------------------|---------------------|
+| Sentinel-2 pre-proccessing | 3.39 GB             |
+| Sentinel-3 pre-proccessing | 1.7 MB              |
+| Combinations               | 3.14 GB             |
+| Final outputs              | 114 MB              |
+
+Also a suggestion is to limit the cache size are shown in the tips below.
+
+### Errors with Sentinel-2 toolbox
+
+The Sentinel-2 toolbox could have issue and provide errors, here some guide that could help to solve them:
+- [Cache size](https://rus-copernicus.eu/forum/t/snap-clean-up-the-snap-cache-folders/113)
+- [Resampling issue](https://forum.step.esa.int/t/s2-resampling-op-error/4042) 
+- [NullTileError](https://forum.step.esa.int/t/waiting-thread-recieved-a-null-tile-error/34186)
 
 ## Authors
 The official code of SNAP is released with [GNU General Public License v3.0](https://github.com/DHI-GRAS/sen-et-snap-scripts/blob/master/LICENSE) by the original authors and as reported in the [plugin code repository](https://github.com/DHI-GRAS/senEtSnapSta).
