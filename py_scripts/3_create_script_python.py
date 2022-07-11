@@ -116,20 +116,23 @@ text = ""
 
 # Check combination s2 and s3 based on time and bbox
 for image in images:
-    if image["platform"] == "S2":
-        for line in open(image["path"], 'r').readlines():
-            if "<EXT_POS_LIST>" in line:
-                b_s2 = line.strip()[14:][:-15].strip().split(" ")
-                break
-        s2_bbox = Polygon([[float(b_s2[i+1]), float(b_s2[i])] for i in range(0,len(b_s2),2)])
-        s2_list.append([int(image["uid"]), s2_bbox, image["tile"]])
-    elif image["platform"] == "S3":
-        for line in open(image["path"], 'r').readlines():
-            if "gml:posList" in line:
-                b_s3 = line.strip()[13:][:-14].strip().split(" ")
-                break
-        s3_bbox, s3_bbox_alt = extract_s3_bbox(b_s3)
-        s3_list.append([int(image["uid"]), s3_bbox, s3_bbox_alt, image["tile"]])
+    try: 
+        if image["platform"] == "S2":
+            for line in open(image["path"], 'r').readlines():
+                if "<EXT_POS_LIST>" in line:
+                    b_s2 = line.strip()[14:][:-15].strip().split(" ")
+                    break
+            s2_bbox = Polygon([[float(b_s2[i+1]), float(b_s2[i])] for i in range(0,len(b_s2),2)])
+            s2_list.append([int(image["uid"]), s2_bbox, image["tile"]])
+        elif image["platform"] == "S3":
+            for line in open(image["path"], 'r').readlines():
+                if "gml:posList" in line:
+                    b_s3 = line.strip()[13:][:-14].strip().split(" ")
+                    break
+            s3_bbox, s3_bbox_alt = extract_s3_bbox(b_s3)
+            s3_list.append([int(image["uid"]), s3_bbox, s3_bbox_alt, image["tile"]])
+    except:
+        print("Error with images, not possible to open it" + str(image["derived_product_path"]) )
 
 # Spatial control of the couples
 for s2 in s2_list:
