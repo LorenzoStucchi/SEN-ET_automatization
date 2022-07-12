@@ -36,12 +36,13 @@ for image in images:
                 minutes = str(mean_time_m)
             image["hour"] = hours + ":" + minutes
 
-        if image["uid"] == 0 :
-            temp = "\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
-        else: 
-            temp = temp + ",\n\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
     except:
         print("Error with images, not possible to open it" + str(image["derived_product_path"]) )
+
+    if image["uid"] == 0 :
+        temp = "\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
+    else: 
+        temp = temp + ",\n\t\t" + str(image).replace("\'","\"").replace(", ", ",\n\t\t\t").replace("{", "{\n\t\t\t").replace("}","\n\t\t}")
 
 j = "{\n\t\"data\":\n\t[\n" + temp + "\n\t]\n}"
 with open(path_file_datetime, "w") as f:
