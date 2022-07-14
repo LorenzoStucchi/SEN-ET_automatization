@@ -20,7 +20,7 @@ file_date_s3.close()
 
 text = ""
 for day in date_s3:
-    path = general_path + "S3\\"  + day + "\\S3_" + day + "_cut.dim"
+    path = general_path + "S3\\"  + day + "\\S3_" + day + "_mask.dim"
     for line in open(path, 'r').readlines():
         if "PRODUCT_SCENE_RASTER_START_TIME" in line:
             data_start = line.split(">")[1].split("<")[0]

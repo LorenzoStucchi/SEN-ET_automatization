@@ -20,7 +20,7 @@ general_path = param["general_path"]
 sub_folders = [name for name in os.listdir(general_path) if os.path.isdir(os.path.join(general_path, name))]
 
 for folder in sub_folders:
-    temp_path = general_path + "\\" + folder
+    temp_path = general_path + folder
     if folder == "S2":
         list_s2_days = [temp_path + "\\" + name for name in os.listdir(temp_path) if os.path.isdir(os.path.join(temp_path, name))]
         valid_s2_days = [day for day in list_s2_days if is_valid_date(day.split("\\")[-1])]
