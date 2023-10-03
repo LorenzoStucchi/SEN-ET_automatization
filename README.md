@@ -17,6 +17,8 @@ The automation process reduces it to one step and presents this schema:
 ## Installation
 It is needed to have installed SNAP (with Python 3.6) and the [SEN-ET plugin](https://www.esa-sen4et.org/static/media/Sen-ET-plugin-v1.0.1.b41ae6c8.zip) as indicated in the [official plugin documentation](https://www.esa-sen4et.org/static/media/sen-et-user-manual-v1.1.0.5d1ac526.pdf) in Section 3.2. In case of troubleshooting, see Section 3.4.
 
+*The code and the plugin have been tested only with SNAP 8.*
+
 The suggested version of python to be used for Windows is the 3.6.8, it should be downloaded before the installation of SNAP. The installer could be downloaded [here](https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe).
 
 At the first start, it is needed to run an operator to complete the bundle installation as indicated in the documentation:
