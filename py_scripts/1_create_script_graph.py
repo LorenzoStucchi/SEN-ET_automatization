@@ -90,6 +90,7 @@ for line in file_path_s2:
 
     # Processing
     script_text = script_text + "echo \"\t Processing the image S2 " + date + "\"\n"
+    mask_image = path + "\\S2_" + date + "_mask.dim"
     bio_image = path + "\\S2_" + date + "_biophysical.dim"
     refl_image = path + "\\S2_" + date + "_reflectance.dim"
     resample_image = path + "\\S2_" + date + "_resampled.dim"
